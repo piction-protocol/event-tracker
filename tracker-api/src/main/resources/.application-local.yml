@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: ""
+    username: ""
+    password: ""
+logging:
+  level:
+    org:
+      springframework:
+        web: TRACE
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE

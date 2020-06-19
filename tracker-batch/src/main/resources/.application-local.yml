@@ -1,0 +1,27 @@
+spring:
+  flyway:
+    schemas: ""
+    url: ""
+    username: ""
+    password: ""
+    encoding: UTF-8
+  datasource:
+    url: ""
+    username: ""
+    password: ""
+  batch:
+    initialize-schema: always
+    job:
+      names: none
+logging:
+  level:
+    org:
+      springframework:
+        web: TRACE
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
