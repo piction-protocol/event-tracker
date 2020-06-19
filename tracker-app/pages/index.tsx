@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import Layout from '../components/Layout'
 import styled from 'styled-components'
+import { GetServerSideProps } from 'next'
+import { InferGetServerSidePropsType } from 'next'
 
 const name = "Event Tracker"
 
@@ -10,7 +12,7 @@ function getName(str: string): string {
 
 const BtnGood = styled.button``
 
-export default function Home() {
+export default function Home({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <div>
       <Layout title="Welcome">
@@ -31,8 +33,33 @@ export default function Home() {
             </Link>
           </BtnGood>
         </p>
-        
+
+        <p>
+          {data.map( (categorie: Categories) => (
+            <li>piction categorie name: { categorie.name }</li>
+          ))}
+          
+        </p>
+
       </Layout>
     </div>
   )
+}
+
+interface Categories {
+  id: number
+  name: string
+  priority: number
+  thumbnail: string
+  categorizedCount: number
+  status: boolean
+  createdAt: number
+}
+
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const res = await fetch(`https://api.piction.network/categories`)
+  const data: Array<Categories> = await res.json()
+
+  return { props: { data } }
 }
