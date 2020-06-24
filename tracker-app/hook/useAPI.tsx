@@ -33,4 +33,8 @@ function useAPI() {
         create: (accessToken) => setCookie('access_token', accessToken, {path: '/'}),
         delete: () => removeCookie('access_token'),
     };
+
+    const users = {
+        get: () => API.get('users/me')
+    }
 }
