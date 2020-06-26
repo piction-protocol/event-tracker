@@ -1,16 +1,20 @@
-import {useCookies} from 'react-cookie';
 import axios from 'axios';
 import Router from 'next/router'
+import { useCookies } from 'react-cookie';
+
+interface User {
+    username: string;
+    password: string;
+}
 
 function useAPI() {
-    const [cookies, setCookie, removeCookie] = useCookies(['access_token'])
-    const accessToken = cookies.access_token
+    
     const API = axios.create({
-        baseURL: process.env.REACT_APP_API_URL || 'https://tracker-api.piction.network/',
+        baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000', //'https://tracker-api.piction.network/',
         headers: {
-          'X-Auth-Token': accessToken,
           'X-Device-Platform': 'web',
         },
+        withCredentials: true,
     });
 
     API.interceptors.response.use(r => r,
@@ -24,17 +28,18 @@ function useAPI() {
     );
 
     const session = {
-        create: (data) => API.post('sessions', data),
+        create: (user: User) => API.post('sessions', user),
         delete: () => API.delete('/sessions'),
-    };
-
-    const token = {
-        get: () => accessToken,
-        create: (accessToken) => setCookie('access_token', accessToken, {path: '/'}),
-        delete: () => removeCookie('access_token'),
     };
 
     const users = {
         get: () => API.get('users/me')
     }
+
+    return {
+        session,
+        users,
+      };
 }
+
+export default useAPI;

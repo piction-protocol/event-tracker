@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import Layout from '../components/Layout'
 import styled from 'styled-components'
-import React, { useState, useEffect } from "react";
-import Router from 'next/router'
 
 const name = "Event Tracker"
 
@@ -13,15 +11,6 @@ function getName(str: string): string {
 const BtnGood = styled.button``
 
 export default function Home() {
-
-  const [isLogin, setLogin] = useState(false)
-
-  useEffect(() => {
-    const {pathname} = Router
-    if(pathname == '/' ){
-        Router.push('/login')
-    }
-  });
 
   return (
     <div>

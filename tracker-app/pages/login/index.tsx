@@ -1,3 +1,6 @@
+import React, { useState, useCallback } from "react";
+import useAPI from '../../hooks/useAPI';
+import Router from 'next/router'
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import LockIcon from '@material-ui/icons/Lock';
@@ -23,8 +26,23 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+
 export default function LoginPage() {
+    
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
     const classes = useStyles()
+    const API = useAPI()
+
+    const onSubmit = async () => {
+        try {
+            const response = await API.session.create({ username: username, password: password })
+            Router.back()
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -45,6 +63,7 @@ export default function LoginPage() {
                         label="Name"
                         name="userName"
                         autoFocus
+                        onChange={(e) => { setUsername(e.target.value) }}
                     />
                     <TextField
                         variant="outlined"
@@ -55,6 +74,7 @@ export default function LoginPage() {
                         label="Password"
                         name="password"
                         type="password"
+                        onChange={(e) => { setPassword(e.target.value) }}
                     />
                 </form>
                 
@@ -63,7 +83,8 @@ export default function LoginPage() {
                     fullWidth
                     variant="contained"
                     color="primary"
-                    className={classes.submit}>
+                    className={classes.submit}
+                    onClick={onSubmit}>
                     LOGIN
                 </Button>
             
