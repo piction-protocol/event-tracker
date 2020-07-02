@@ -13,6 +13,12 @@ spring:
     initialize-schema: always
     job:
       names: none
+
+sync:
+  forward: true
+  back: false
+  scope: REGISTERD_EVENT
+
 logging:
   level:
     org:
