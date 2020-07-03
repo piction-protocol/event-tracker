@@ -1,11 +1,6 @@
 import axios from 'axios';
 import Router from 'next/router'
-import { useCookies } from 'react-cookie';
-
-interface User {
-    username: string;
-    password: string;
-}
+import User from '../model/User'
 
 function useAPI() {
     
