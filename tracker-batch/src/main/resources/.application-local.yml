@@ -15,9 +15,10 @@ spring:
       names: none
 
 sync:
+  network: CYPRESS
   forward: true
   back: false
-  scope: REGISTERD_EVENT
+  scope: REGISTERED_EVENTS
 
 logging:
   level:
