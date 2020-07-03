@@ -23,7 +23,7 @@ class SyncExecutor(
     final var forwardSyncBlockNumber: Long = 0
 
     companion object {
-        val caver = Caver.build(Caver.MAINNET_URL)
+        val caver = Caver.build(SyncProperties.network.url)
     }
 
     init {
