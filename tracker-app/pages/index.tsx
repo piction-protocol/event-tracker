@@ -1,48 +1,28 @@
-import React, { forwardRef } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { CssBaseline } from '@material-ui/core';
-import TopBar from '../components/TopBar';
-import Container from '@material-ui/core/Container';
-import MaterialTable from "material-table";
-import Contract from '../model/Contract';
+import React, { forwardRef } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import { CssBaseline } from '@material-ui/core'
+import Container from '@material-ui/core/Container'
+import MaterialTable from "material-table"
+import TopBar from '../components/TopBar'
+import Contract from '../model/Contract'
+import ContractItem from '../model/ContractItem'
+import ContractDialog from '../components/ContractDialog'
+import useAPI from '../hooks/useAPI'
 
-import AddBox from '@material-ui/icons/AddBox';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import Check from '@material-ui/icons/Check';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import Clear from '@material-ui/icons/Clear';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
-import Edit from '@material-ui/icons/Edit';
-import FilterList from '@material-ui/icons/FilterList';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import Remove from '@material-ui/icons/Remove';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import Search from '@material-ui/icons/Search';
-import ViewColumn from '@material-ui/icons/ViewColumn';
+import AddBox from '@material-ui/icons/AddBox'
+import ChevronLeft from '@material-ui/icons/ChevronLeft'
+import ChevronRight from '@material-ui/icons/ChevronRight'
+import DeleteOutline from '@material-ui/icons/DeleteOutline'
+import Edit from '@material-ui/icons/Edit'
+import FirstPage from '@material-ui/icons/FirstPage'
+import LastPage from '@material-ui/icons/LastPage'
 
 const tableIcons = {
-    Add: forwardRef<SVGSVGElement>((props, ref) => <AddBox {...props} ref={ref} />),
-    Check: forwardRef<SVGSVGElement>((props, ref) => <Check {...props} ref={ref} />),
-    Clear: forwardRef<SVGSVGElement>((props, ref) => <Clear {...props} ref={ref} />),
-    Delete: forwardRef<SVGSVGElement>((props, ref) => <DeleteOutline {...props} ref={ref} />),
-    DetailPanel: forwardRef<SVGSVGElement>((props, ref) => <ChevronRight {...props} ref={ref} />),
-    Edit: forwardRef<SVGSVGElement>((props, ref) => <Edit {...props} ref={ref} />),
-    Export: forwardRef<SVGSVGElement>((props, ref) => <SaveAlt {...props} ref={ref} />),
-    Filter: forwardRef<SVGSVGElement>((props, ref) => <FilterList {...props} ref={ref} />),
     FirstPage: forwardRef<SVGSVGElement>((props, ref) => <FirstPage {...props} ref={ref} />),
     LastPage: forwardRef<SVGSVGElement>((props, ref) => <LastPage {...props} ref={ref} />),
     NextPage: forwardRef<SVGSVGElement>((props, ref) => <ChevronRight {...props} ref={ref} />),
     PreviousPage: forwardRef<SVGSVGElement>((props, ref) => <ChevronLeft {...props} ref={ref} />),
-    ResetSearch: forwardRef<SVGSVGElement>((props, ref) => <Clear {...props} ref={ref} />),
-    Search: forwardRef<SVGSVGElement>((props, ref) => <Search {...props} ref={ref} />),
-    SortArrow: forwardRef<SVGSVGElement>((props, ref) => <ArrowDownward {...props} ref={ref} />),
-    ThirdStateCheck: forwardRef<SVGSVGElement>((props, ref) => <Remove {...props} ref={ref} />),
-    ViewColumn: forwardRef<SVGSVGElement>((props, ref) => <ViewColumn {...props} ref={ref} />)
-};
-
-const drawerWidth = 240;
+}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,26 +33,58 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh',
         overflow: 'auto',
     },
+    appBarSpacer: theme.mixins.toolbar,
     container: {
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
     },
-    appBarSpacer: theme.mixins.toolbar,
     table: {
         maxWidth: '100%'
     },
 }))
 
 export default function Home() {
-    const classes = useStyles();
+    const classes = useStyles()
+    const [contractDialog, setContractDialog] = React.useState(false)
+    const [selectedContract, setSelectedContract] = React.useState(null)
+
+    const API = useAPI()
+    const getContracts = async () => {
+        try {
+            //const response = await API.
+            
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const removeContract = async (contract: ContractItem) => {
+        try {
+            //const response = await API.
+            
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    React.useEffect(() => {
+        getContracts()
+    })
+
+    const handleToggleContractDialog = () => {
+        setContractDialog(!contractDialog)
+    }
+
     let contrast: Contract = {
-        id: 0, 
-        name: 'pxl', 
-        address: '0x000000000', 
-        description: '셈플데이터', 
-        user_id: 1, 
-        updated_at: 1000, 
-        created_at: 2000}
+        id: 0,
+        name: 'pxl',
+        address: '0x000000000',
+        description: '셈플데이터',
+        user_id: 1,
+        updated_at: 1000,
+        created_at: 2000
+    }
+
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -85,10 +97,7 @@ export default function Home() {
                         options={{
                             search: false,
                             sorting: false,
-                        }}
-                        onRowClick={(event, rowData) => {
-                            console.log('event: ' + event)
-                            console.log('rowData: ' + rowData)
+                            actionsColumnIndex: -1
                         }}
                         columns={[
                             { title: "Id", field: "id", type: "numeric" },
@@ -104,9 +113,41 @@ export default function Home() {
                                 description: contrast.description,
                             },
                         ]}
+                        onRowClick={(event, rowData) => {
+                            console.log('event: ' + event)
+                            console.log('rowData: ' + rowData)
+                        }}
+                        actions={[
+                            {
+                                icon: AddBox,
+                                tooltip: 'Add Contract',
+                                isFreeAction: true,
+                                onClick: (event) => { 
+                                    setSelectedContract(null)
+                                    handleToggleContractDialog()
+                                }
+                            },
+                            rowData => ({
+                                icon: Edit,
+                                tooltip: 'Edit Contract',
+                                onClick: (event, rowData) => { 
+                                    setSelectedContract(rowData)
+                                    handleToggleContractDialog()
+                                }
+                            }),
+                            rowData => ({
+                                icon: DeleteOutline,
+                                tooltip: 'Remove Contract',
+                                onClick: (event, rowData) => { 
+                                    removeContract(rowData as ContractItem)
+                                }
+                            })
+                        ]}
                         title="Contract"
                     />
                 </Container>
+
+                <ContractDialog show={contractDialog} selected={selectedContract} handle={handleToggleContractDialog} />
             </main>
         </div>
     )

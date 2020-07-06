@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'
 import Router from 'next/router'
 import User from '../model/User'
 
@@ -10,7 +10,7 @@ function useAPI() {
           'X-Device-Platform': 'web',
         },
         withCredentials: true,
-    });
+    })
 
     API.interceptors.response.use(r => r,
         e => ({
@@ -20,12 +20,12 @@ function useAPI() {
 //          500: () => navigate('/500', {state: {redirectTo: window.location.pathname}, replace: true}),
           400: () => Promise.reject(e)
         }[e.response.status]())
-    );
+    )
 
     const session = {
         create: (user: User) => API.post('sessions', user),
         delete: () => API.delete('/sessions'),
-    };
+    }
 
     const users = {
         get: () => API.get('users/me')
@@ -34,7 +34,7 @@ function useAPI() {
     return {
         session,
         users,
-      };
+      }
 }
 
-export default useAPI;
+export default useAPI
