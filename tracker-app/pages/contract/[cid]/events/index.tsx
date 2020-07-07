@@ -4,11 +4,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import { CssBaseline } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
 import MaterialTable from "material-table"
-import TopBar from '../components/TopBar'
-import Contract from '../model/Contract'
-import ContractItem from '../model/ContractItem'
-import ContractDialog from '../components/ContractDialog'
-import useAPI from '../hooks/useAPI'
+import TopBar from '../../../../components/TopBar'
+import Event from '../../../../model/Event'
+import useAPI from '../../../../hooks/useAPI'
 
 import AddBox from '@material-ui/icons/AddBox'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
@@ -44,47 +42,31 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function Home() {
+export default function Events() {
     const classes = useStyles()
-    const [contractDialog, setContractDialog] = React.useState(false)
-    const [selectedContract, setSelectedContract] = React.useState(null)
     const router = useRouter()
+    const cId = router.query
+    
+    console.log('events cid : '+cId)
 
     const API = useAPI()
-    const getContracts = async () => {
+    const getEvents = async () => {
         try {
-            //const response = await API.
+            //const response = await API cId.
             
         } catch (e) {
             console.log(e)
         }
     }
 
-    const removeContract = async (contract: ContractItem) => {
-        try {
-            //const response = await API.
-            
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    React.useEffect(() => {
-        getContracts()
-    })
-
-    const handleToggleContractDialog = () => {
-        setContractDialog(!contractDialog)
-    }
-
-    let contrast: Contract = {
+    let event: Event = {
         id: 0,
-        name: 'pxl',
-        address: '0x000000000',
-        description: '셈플데이터',
-        user_id: 1,
-        updated_at: 1000,
-        created_at: 2000
+        name: 'Transfer',
+        description: '이벤트 셈플데이터',
+        contract_id: 1,
+        signature: 'from(Address indexed), to(Address indexed), value(Uint256)',
+        updated_at: 2000,
+        created_at: 3000
     }
 
     return (
@@ -104,54 +86,48 @@ export default function Home() {
                         columns={[
                             { title: "Id", field: "id", type: "numeric" },
                             { title: "Name", field: "name", type: "string" },
-                            { title: "Address(0x)", field: "address", type: "string" },
-                            { title: "description", field: "description", type: "string" },
+                            { title: "Params", field: "params", type: "string" },
+                            { title: "Description", field: "description", type: "string" },
                         ]}
                         data={[
                             {
-                                id: contrast.id,
-                                name: contrast.name,
-                                address: contrast.address,
-                                description: contrast.description,
+                                id: event.id,
+                                name: event.name,
+                                params: event.signature,
+                                description: event.description,
                             },
                         ]}
                         onRowClick={(event, rowData) => {
                             console.log('event: ' + event)
                             console.log('rowData: ' + rowData)
-                            let row = rowData as ContractItem
-                            router.replace('/contract/'+row.id+'/events')
                         }}
                         actions={[
                             {
                                 icon: AddBox,
-                                tooltip: 'Add Contract',
+                                tooltip: 'Add Event',
                                 isFreeAction: true,
-                                onClick: (event) => { 
-                                    setSelectedContract(null)
-                                    handleToggleContractDialog()
+                                onClick: (event) => {
+
                                 }
                             },
                             rowData => ({
                                 icon: Edit,
-                                tooltip: 'Edit Contract',
-                                onClick: (event, rowData) => { 
-                                    setSelectedContract(rowData)
-                                    handleToggleContractDialog()
+                                tooltip: 'Edit Event',
+                                onClick: (event, rowData) => {
+
                                 }
                             }),
                             rowData => ({
                                 icon: DeleteOutline,
-                                tooltip: 'Remove Contract',
-                                onClick: (event, rowData) => { 
-                                    removeContract(rowData as ContractItem)
+                                tooltip: 'Remove Event',
+                                onClick: (event, rowData) => {
+
                                 }
                             })
                         ]}
-                        title="Contract"
+                        title="Events"
                     />
                 </Container>
-
-                <ContractDialog show={contractDialog} selected={selectedContract} handle={handleToggleContractDialog} />
             </main>
         </div>
     )

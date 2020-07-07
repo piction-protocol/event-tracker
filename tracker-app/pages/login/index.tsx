@@ -37,7 +37,7 @@ export default function LoginPage() {
     const onSubmit = async () => {
         try {
             const response = await API.session.create({ username: username, password: password })
-            Router.back()
+            Router.replace('/')
         } catch (e) {
             console.log(e)
         }
