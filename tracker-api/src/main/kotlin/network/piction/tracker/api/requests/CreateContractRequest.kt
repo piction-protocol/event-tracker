@@ -1,6 +1,5 @@
 package network.piction.tracker.api.requests
 
-import network.piction.tracker.api.config.UserPrincipal
 import network.piction.tracker.common.entities.ContractEntity
 import network.piction.tracker.common.entities.ParentEntity
 import org.springframework.http.HttpStatus
