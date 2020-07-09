@@ -11,6 +11,7 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import ContractDialogData from '../model/ContractDialogData'
 import useAPI from '../hooks/useAPI'
+import Contract from '../model/Contract'
 
 interface validationText {
     error: boolean
@@ -50,9 +51,16 @@ export default function ContractDialog(props: ContractDialogData) {
     const API = useAPI()
     const update = async () => {
         try {
-            //const response = await API.
+            const response = await API.contract.create({name, address, description} as Contract)
+            console.log('response : '+response)
+            console.log('response status : '+response.status)
+            console.log('response data : '+response.data)
+
+            setLoading(false)
+            props.handle()
         } catch (e) {
             console.log(e)
+            setLoading(false)
         }
     }
 

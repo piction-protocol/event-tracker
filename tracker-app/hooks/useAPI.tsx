@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Router from 'next/router'
 import User from '../model/User'
+import Contract from '../model/Contract'
 
 function useAPI() {
     
@@ -31,9 +32,18 @@ function useAPI() {
         get: () => API.get('users/me')
     }
 
+    const contract = {
+        create: (contract: Contract) => API.post('contracts', contract),
+        //TODO get all
+        //TODO get id
+        //TODO put
+        //TODO del
+    }
+
     return {
         session,
         users,
+        contract,
       }
 }
 
