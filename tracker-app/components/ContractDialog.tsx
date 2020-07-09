@@ -51,13 +51,13 @@ export default function ContractDialog(props: ContractDialogData) {
     const API = useAPI()
     const update = async () => {
         try {
-            const response = await API.contract.create({name, address, description} as Contract)
-            console.log('response : '+response)
-            console.log('response status : '+response.status)
-            console.log('response data : '+response.data)
+            const response = await API.contract.create({ name, address, description } as Contract)
+            console.log(`response : ${response}`)
+            console.log('response status : ' + response.status)
+            console.log('response data : ' + response.data)
 
             setLoading(false)
-            props.handle()
+            props.handle(true)
         } catch (e) {
             console.log(e)
             setLoading(false)
@@ -88,9 +88,9 @@ export default function ContractDialog(props: ContractDialogData) {
     }
 
     return (
-        <Dialog 
-            open={props.show} 
-            onClose={props.handle} 
+        <Dialog
+            open={props.show}
+            onClose={() => { props.handle(false) }}
             aria-labelledby="form-dialog-title"
             disableBackdropClick={loading}
             disableEscapeKeyDown={loading}>
@@ -139,7 +139,7 @@ export default function ContractDialog(props: ContractDialogData) {
             </DialogContent>
             <DialogActions>
                 <Button
-                    onClick={props.handle}
+                    onClick={() => { props.handle(false) }}
                     color="primary"
                     disabled={loading}>
                     취소

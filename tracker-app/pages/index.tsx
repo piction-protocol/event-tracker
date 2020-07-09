@@ -50,11 +50,15 @@ export default function Home() {
     const [selectedContract, setSelectedContract] = React.useState(null)
     const router = useRouter()
 
+    const [contracts, setContracts] = React.useState(Array<Contract>())
+
+
     const API = useAPI()
-    const getContracts = async () => {
+    const getContractsData = async () => {
         try {
-            //const response = await API.
-            
+            const response = await API.contract.getAll({page: 1, size: 5})
+            console.log(`getContractsData response status: ${response.status}`)
+            setContracts(response.data.content)
         } catch (e) {
             console.log(e)
         }
@@ -70,21 +74,14 @@ export default function Home() {
     }
 
     React.useEffect(() => {
-        getContracts()
-    })
+        getContractsData()
+    },[])
 
-    const handleToggleContractDialog = () => {
+    const handleToggleContractDialog = (refresh: boolean) => {
         setContractDialog(!contractDialog)
-    }
-
-    let contrast: Contract = {
-        id: 0,
-        name: 'pxl',
-        address: '0x000000000',
-        description: '셈플데이터',
-        user_id: 1,
-        updated_at: 1000,
-        created_at: 2000
+        if (refresh) {
+            getContractsData()
+        }
     }
 
     return (
@@ -107,14 +104,7 @@ export default function Home() {
                             { title: "Address(0x)", field: "address", type: "string" },
                             { title: "description", field: "description", type: "string" },
                         ]}
-                        data={[
-                            {
-                                id: contrast.id,
-                                name: contrast.name,
-                                address: contrast.address,
-                                description: contrast.description,
-                            },
-                        ]}
+                        data={ contracts }
                         onRowClick={(event, rowData) => {
                             console.log('event: ' + event)
                             console.log('rowData: ' + rowData)
@@ -128,7 +118,7 @@ export default function Home() {
                                 isFreeAction: true,
                                 onClick: (event) => { 
                                     setSelectedContract(null)
-                                    handleToggleContractDialog()
+                                    handleToggleContractDialog(false)
                                 }
                             },
                             rowData => ({
@@ -136,7 +126,7 @@ export default function Home() {
                                 tooltip: 'Edit Contract',
                                 onClick: (event, rowData) => { 
                                     setSelectedContract(rowData)
-                                    handleToggleContractDialog()
+                                    handleToggleContractDialog(false)
                                 }
                             }),
                             rowData => ({

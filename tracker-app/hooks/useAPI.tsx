@@ -2,6 +2,7 @@ import axios from 'axios'
 import Router from 'next/router'
 import User from '../model/User'
 import Contract from '../model/Contract'
+import Pageable from '../model/Pageable'
 
 function useAPI() {
     
@@ -34,8 +35,8 @@ function useAPI() {
 
     const contract = {
         create: (contract: Contract) => API.post('contracts', contract),
-        //TODO get all
-        //TODO get id
+        get: (contractId: number) => API.get(`contracts/${contractId}`),
+        getAll: (page: Pageable) => API.get('contracts', {params: page}),
         //TODO put
         //TODO del
     }
