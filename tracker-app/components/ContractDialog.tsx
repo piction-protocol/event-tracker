@@ -51,7 +51,9 @@ export default function ContractDialog(props: ContractDialogData) {
     const API = useAPI()
     const update = async () => {
         try {
-            const response = await API.contract.create({ name, address, description } as Contract)
+            const response = props.selected != null 
+                ? await API.contract.edit(props.selected.id, { name, address, description } as Contract)
+                : await API.contract.create({ name, address, description } as Contract)
             console.log(`response : ${response}`)
             console.log('response status : ' + response.status)
             console.log('response data : ' + response.data)

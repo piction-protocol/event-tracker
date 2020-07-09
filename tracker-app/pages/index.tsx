@@ -64,10 +64,14 @@ export default function Home() {
         }
     }
 
+    const confirmDialog = (confirm: boolean) => {
+        //todo show dialog
+    }
+
     const removeContract = async (contract: ContractItem) => {
         try {
-            //const response = await API.
-            
+            const response = await API.contract.delete(contract.id)
+            getContractsData()
         } catch (e) {
             console.log(e)
         }

@@ -37,8 +37,8 @@ function useAPI() {
         create: (contract: Contract) => API.post('contracts', contract),
         get: (contractId: number) => API.get(`contracts/${contractId}`),
         getAll: (page: Pageable) => API.get('contracts', {params: page}),
-        //TODO put
-        //TODO del
+        edit: (contractId: number, contract: Contract) => API.put(`contracts/${contractId}`, contract),
+        delete: (contractId: number) => API.delete(`contracts/${contractId}`),
     }
 
     return {
