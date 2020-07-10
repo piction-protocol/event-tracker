@@ -7,8 +7,8 @@ import MaterialTable from "material-table"
 import TopBar from '../components/TopBar'
 import ContractDialog from '../components/ContractDialog'
 import AlertDialog from '../components/AlertDialog';
-import Contract from '../model/Contract'
 import ContractItem from '../model/ContractItem'
+import PageParam from '../model/PageParam';
 import useAPI from '../hooks/useAPI'
 
 import AddBox from '@material-ui/icons/AddBox'
@@ -17,9 +17,10 @@ import ChevronRight from '@material-ui/icons/ChevronRight'
 import FirstPage from '@material-ui/icons/FirstPage'
 import LastPage from '@material-ui/icons/LastPage'
 
-import DeleteOutline from '@material-ui/icons/DeleteOutline'
+import DeleteIcon from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit'
 import FindInPageIcon from '@material-ui/icons/FindInPage';
+import ContractsResponse from '../model/ContractsResponse';
 
 const tableIcons = {
     FirstPage: forwardRef<SVGSVGElement>((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -49,29 +50,26 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
     const classes = useStyles()
+    const router = useRouter()
+    const API = useAPI()
+
+    const tableRef = React.useRef();
     const [alertDialog, setAlertDialog] = React.useState({ show: false, title: '', msg: ``, handle: (confirm: boolean)=> {}})
     const [contractDialog, setContractDialog] = React.useState(false)
     const [selectedContract, setSelectedContract] = React.useState(null)
-    const router = useRouter()
 
-    const [contracts, setContracts] = React.useState(Array<Contract>())
+    const refreshContracts = () => {
+        (tableRef.current as any)?.onQueryChange()
+    }
 
-
-    const API = useAPI()
-    const getContractsData = async () => {
-        try {
-            const response = await API.contract.getAll({page: 1, size: 5})
-            console.log(`getContractsData response status: ${response.status}`)
-            setContracts(response.data.content)
-        } catch (e) {
-            console.log(e)
-        }
+    const getContractss = async (pageParam: PageParam) => {
+        return await API.contract.getAll(pageParam)
     }
 
     const removeContract = async (contract: ContractItem) => {
         try {
             const response = await API.contract.delete(contract.id)
-            getContractsData()
+            refreshContracts()
         } catch (e) {
             console.log(e)
         }
@@ -80,13 +78,9 @@ export default function Home() {
     const handleToggleContractDialog = (refresh: boolean) => {
         setContractDialog(!contractDialog)
         if (refresh) {
-            getContractsData()
+            refreshContracts()
         }
     }
-
-    React.useEffect(() => {
-        getContractsData()
-    },[])
 
     return (
         <div className={classes.root}>
@@ -96,11 +90,13 @@ export default function Home() {
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
                     <MaterialTable
+                        title="Contract"
+                        tableRef={tableRef}
                         icons={tableIcons}
                         options={{
                             search: false,
                             sorting: false,
-                            actionsColumnIndex: -1
+                            actionsColumnIndex: -1,
                         }}
                         columns={[
                             { title: "Id", field: "id", type: "numeric" },
@@ -108,7 +104,18 @@ export default function Home() {
                             { title: "Address(0x)", field: "address", type: "string" },
                             { title: "description", field: "description", type: "string" },
                         ]}
-                        data={ contracts }
+                        data={query =>
+                            new Promise((resolve, reject) => {
+                                getContractss({ size: query.pageSize, page: query.page + 1 })
+                                    .then(result => result.data as ContractsResponse)
+                                    .then(result => {
+                                        resolve({
+                                            data: result.content,
+                                            page: result.pageable.pageNumber,
+                                            totalCount: result.totalElements,
+                                        })
+                                    })
+                            })}
                         onRowClick={(event, rowData) => {
                             console.log('event: ' + event)
                             console.log('rowData: ' + rowData)
@@ -134,7 +141,7 @@ export default function Home() {
                                 }
                             }),
                             rowData => ({
-                                icon: DeleteOutline,
+                                icon: DeleteIcon,
                                 tooltip: 'Delete Contract',
                                 onClick: (event, rowData) => {
                                     let row = rowData as ContractItem
@@ -159,7 +166,6 @@ export default function Home() {
                                 }
                             }),
                         ]}
-                        title="Contract"
                     />
                 </Container>
 

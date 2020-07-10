@@ -1,4 +1,5 @@
 export default interface Pageable {
-    page: number
-    size: number
+    offset: number
+    pageSize: number
+    pageNumber: number
 }
