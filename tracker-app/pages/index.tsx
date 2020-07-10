@@ -5,18 +5,21 @@ import { CssBaseline } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
 import MaterialTable from "material-table"
 import TopBar from '../components/TopBar'
+import ContractDialog from '../components/ContractDialog'
+import AlertDialog from '../components/AlertDialog';
 import Contract from '../model/Contract'
 import ContractItem from '../model/ContractItem'
-import ContractDialog from '../components/ContractDialog'
 import useAPI from '../hooks/useAPI'
 
 import AddBox from '@material-ui/icons/AddBox'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import ChevronRight from '@material-ui/icons/ChevronRight'
-import DeleteOutline from '@material-ui/icons/DeleteOutline'
-import Edit from '@material-ui/icons/Edit'
 import FirstPage from '@material-ui/icons/FirstPage'
 import LastPage from '@material-ui/icons/LastPage'
+
+import DeleteOutline from '@material-ui/icons/DeleteOutline'
+import Edit from '@material-ui/icons/Edit'
+import FindInPageIcon from '@material-ui/icons/FindInPage';
 
 const tableIcons = {
     FirstPage: forwardRef<SVGSVGElement>((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -46,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
     const classes = useStyles()
+    const [alertDialog, setAlertDialog] = React.useState({ show: false, title: '', msg: ``, handle: (confirm: boolean)=> {}})
     const [contractDialog, setContractDialog] = React.useState(false)
     const [selectedContract, setSelectedContract] = React.useState(null)
     const router = useRouter()
@@ -64,10 +68,6 @@ export default function Home() {
         }
     }
 
-    const confirmDialog = (confirm: boolean) => {
-        //todo show dialog
-    }
-
     const removeContract = async (contract: ContractItem) => {
         try {
             const response = await API.contract.delete(contract.id)
@@ -77,16 +77,16 @@ export default function Home() {
         }
     }
 
-    React.useEffect(() => {
-        getContractsData()
-    },[])
-
     const handleToggleContractDialog = (refresh: boolean) => {
         setContractDialog(!contractDialog)
         if (refresh) {
             getContractsData()
         }
     }
+
+    React.useEffect(() => {
+        getContractsData()
+    },[])
 
     return (
         <div className={classes.root}>
@@ -135,17 +135,36 @@ export default function Home() {
                             }),
                             rowData => ({
                                 icon: DeleteOutline,
-                                tooltip: 'Remove Contract',
-                                onClick: (event, rowData) => { 
-                                    removeContract(rowData as ContractItem)
+                                tooltip: 'Delete Contract',
+                                onClick: (event, rowData) => {
+                                    let row = rowData as ContractItem
+                                    setAlertDialog({ 
+                                        show: true, 
+                                        title: 'Delete', 
+                                        msg: `Do you want to delete the '${row.name}'?`, 
+                                        handle: (confirm: boolean)=> { 
+                                            if (confirm) {
+                                                removeContract(row)
+                                            }
+                                            setAlertDialog({ show: false, title: '', msg: ``, handle: (confirm: boolean)=> {}})
+                                        }})
                                 }
-                            })
+                            }),
+                            rowData => ({
+                                icon: FindInPageIcon,
+                                tooltip: 'Show Klaytn Scope',
+                                onClick: (event, rowData) => {
+                                    let row = rowData as ContractItem
+                                    window.location.href = `https://scope.klaytn.com/account/${row.address}`
+                                }
+                            }),
                         ]}
                         title="Contract"
                     />
                 </Container>
 
                 <ContractDialog show={contractDialog} selected={selectedContract} handle={handleToggleContractDialog} />
+                <AlertDialog show={alertDialog.show} title={alertDialog.title} msg={alertDialog.msg} handle={alertDialog.handle} />
             </main>
         </div>
     )
