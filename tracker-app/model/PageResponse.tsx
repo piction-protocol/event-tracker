@@ -1,8 +1,7 @@
-import Contract from "./Contract";
 import Pageable from "./Pageable";
 
-export default interface ContractsResponse {
-    content: Array<Contract>
+export default interface PageResponse<T> {
+    content: Array<T>
     pageable: Pageable
     size: number
     totalPages: number
