@@ -61,7 +61,7 @@ export default function Home() {
         (tableRef.current as any)?.onQueryChange()
     }
 
-    const getContractss = async (pageParam: PageParam) => {
+    const getContracts = async (pageParam: PageParam) => {
         return await API.contract.getAll(pageParam)
     }
 
@@ -105,14 +105,18 @@ export default function Home() {
                         ]}
                         data={query =>
                             new Promise((resolve, reject) => {
-                                getContractss({ size: query.pageSize, page: query.page + 1 })
+                                getContracts({ size: query.pageSize, page: query.page + 1 })
                                     .then(result => result.data as PageResponse<Contract>)
                                     .then(result => {
-                                        resolve({
-                                            data: result.content,
-                                            page: result.pageable.pageNumber,
-                                            totalCount: result.totalElements,
-                                        })
+                                        if (result) {
+                                            resolve({
+                                                data: result.content,
+                                                page: result.pageable.pageNumber,
+                                                totalCount: result.totalElements,
+                                            })
+                                        } else {
+                                            reject("getContracts error")
+                                        }
                                     })
                             })}
                         onRowClick={(event, rowData) => {
