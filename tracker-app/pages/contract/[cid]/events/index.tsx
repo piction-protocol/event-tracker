@@ -4,9 +4,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import { CssBaseline } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
 import MaterialTable from "material-table"
-import TopBar from '../../../../components/TopBar'
-import Event from '../../../../model/Event'
-import useAPI from '../../../../hooks/useAPI'
+import TopBar from 'components/TopBar'
+import Event from 'model/Event'
+import useAPI from 'hooks/useAPI'
 
 import AddBox from '@material-ui/icons/AddBox'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'

@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 import { AppProps } from 'next/app'
-import { ThemeProvider } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from '../src/theme';
+import { ThemeProvider } from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import theme from 'src/theme'
 
 function MyApp({ Component, pageProps }: AppProps) {
 

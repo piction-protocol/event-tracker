@@ -1,5 +1,5 @@
 import React from "react"
-import useAPI from '../../hooks/useAPI'
+import useAPI from 'hooks/useAPI'
 import Router from 'next/router'
 import Container from '@material-ui/core/Container'
 import CssBaseline from '@material-ui/core/CssBaseline'

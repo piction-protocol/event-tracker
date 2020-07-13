@@ -12,14 +12,14 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import Edit from '@material-ui/icons/Edit'
 import FindInPageIcon from '@material-ui/icons/FindInPage'
 import MaterialTable from "material-table"
-import TopBar from '../components/TopBar'
-import ContractDialog from '../components/ContractDialog'
-import AlertDialog from '../components/AlertDialog'
-import ContractItem from '../model/ContractItem'
-import PageParam from '../model/PageParam'
-import PageResponse from '../model/PageResponse'
-import Contract from '../model/Contract'
-import useAPI from '../hooks/useAPI'
+import TopBar from 'components/TopBar'
+import ContractDialog from 'components/ContractDialog'
+import AlertDialog from 'components/AlertDialog'
+import ContractItem from 'model/ContractItem'
+import PageParam from 'model/PageParam'
+import PageResponse from 'model/PageResponse'
+import Contract from 'model/Contract'
+import useAPI from 'hooks/useAPI'
 
 const tableIcons = {
     FirstPage: forwardRef<SVGSVGElement>((props, ref) => <FirstPage {...props} ref={ref} />),

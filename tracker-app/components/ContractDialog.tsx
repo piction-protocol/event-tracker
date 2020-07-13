@@ -9,9 +9,9 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import ContractDialogData from '../model/ContractDialogData'
-import useAPI from '../hooks/useAPI'
-import Contract from '../model/Contract'
+import ContractDialogData from 'model/ContractDialogData'
+import useAPI from 'hooks/useAPI'
+import Contract from 'model/Contract'
 
 interface validationText {
     error: boolean
