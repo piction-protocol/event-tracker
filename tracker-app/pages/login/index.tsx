@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from "react";
-import useAPI from '../../hooks/useAPI';
+import React from "react"
+import useAPI from '../../hooks/useAPI'
 import Router from 'next/router'
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import LockIcon from '@material-ui/icons/Lock';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import LockIcon from '@material-ui/icons/Lock'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -24,20 +24,20 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-}));
+}))
 
 
 export default function LoginPage() {
     
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
+    const [username, setUsername] = React.useState("")
+    const [password, setPassword] = React.useState("")
     const classes = useStyles()
     const API = useAPI()
 
     const onSubmit = async () => {
         try {
             const response = await API.session.create({ username: username, password: password })
-            Router.back()
+            Router.replace('/')
         } catch (e) {
             console.log(e)
         }
@@ -91,4 +91,4 @@ export default function LoginPage() {
             </div>
         </Container>
     )
-};
+}

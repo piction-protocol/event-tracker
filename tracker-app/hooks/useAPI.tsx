@@ -1,6 +1,8 @@
-import axios from 'axios';
+import axios from 'axios'
 import Router from 'next/router'
 import User from '../model/User'
+import Contract from '../model/Contract'
+import PageParam from '../model/PageParam'
 
 function useAPI() {
     
@@ -10,7 +12,7 @@ function useAPI() {
           'X-Device-Platform': 'web',
         },
         withCredentials: true,
-    });
+    })
 
     API.interceptors.response.use(r => r,
         e => ({
@@ -20,21 +22,30 @@ function useAPI() {
 //          500: () => navigate('/500', {state: {redirectTo: window.location.pathname}, replace: true}),
           400: () => Promise.reject(e)
         }[e.response.status]())
-    );
+    )
 
     const session = {
         create: (user: User) => API.post('sessions', user),
         delete: () => API.delete('/sessions'),
-    };
+    }
 
     const users = {
         get: () => API.get('users/me')
     }
 
+    const contract = {
+        create: (contract: Contract) => API.post('contracts', contract),
+        get: (contractId: number) => API.get(`contracts/${contractId}`),
+        getAll: (page: PageParam) => API.get('contracts', {params: page}),
+        edit: (contractId: number, contract: Contract) => API.put(`contracts/${contractId}`, contract),
+        delete: (contractId: number) => API.delete(`contracts/${contractId}`),
+    }
+
     return {
         session,
         users,
-      };
+        contract,
+      }
 }
 
-export default useAPI;
+export default useAPI
