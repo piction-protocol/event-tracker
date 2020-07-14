@@ -1,5 +1,4 @@
 import React, { forwardRef } from 'react'
-import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import { CssBaseline } from '@material-ui/core'
@@ -46,32 +45,21 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-interface QueryProps {
-    cid: string
-}
-
-export const getServerSideProps = async (context) => {
-    const { cid }: QueryProps = context.query
-    return {
-        props: { cid }
-    }
-}
-
-export default function Events(props: QueryProps) {
+export default function Events() {
     const classes = useStyles()
     const router = useRouter()
     const tableRef = React.useRef()
     const API = useAPI()
-    const cId = props.cid
+    const { cid } = router.query
 
-    const [alertDialog, setAlertDialog] = React.useState({ show: false, title: '', msg: ``, handle: (confirm: boolean)=> {}})
+    const [alertDialog, setAlertDialog] = React.useState({ show: false, title: '', msg: ``, handle: (confirm: boolean) => { } })
 
     const refreshTable = () => {
         (tableRef.current as any)?.onQueryChange()
     }
 
     const getEvents = async (pageParam: PageParam) => {
-        return await API.event.getAll(cId, pageParam)
+        return await API.event.getAll(cid as string, pageParam)
     }
 
     return (
@@ -80,7 +68,7 @@ export default function Events(props: QueryProps) {
             <TopBar />
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                <Container maxWidth="lg" className={classes.container}>
+                {cid ? <Container maxWidth="lg" className={classes.container}>
                     <MaterialTable
                         title="Event"
                         tableRef={tableRef}
@@ -96,21 +84,21 @@ export default function Events(props: QueryProps) {
                             { title: "Params", field: "signature", type: "string" },
                             { title: "Description", field: "description", type: "string" },
                         ]}
-                        data={ query =>
+                        data={query =>
                             new Promise((resolve, reject) => {
                                 getEvents({ size: query.pageSize, page: query.page + 1 })
-                                .then(result => result.data as PageResponse<Event>)
-                                .then(result => {
-                                    if (result) {
-                                        resolve({
-                                            data: result.content,
-                                            page: result.pageable.pageNumber,
-                                            totalCount: result.totalElements,
-                                        })
-                                    } else {
-                                        reject("getEvent error")
-                                    }
-                                })
+                                    .then(result => result.data as PageResponse<Event>)
+                                    .then(result => {
+                                        if (result) {
+                                            resolve({
+                                                data: result.content,
+                                                page: result.pageable.pageNumber,
+                                                totalCount: result.totalElements,
+                                            })
+                                        } else {
+                                            reject("getEvent error")
+                                        }
+                                    })
                             })}
                         onRowClick={(event, rowData) => {
                             console.log('rowData: ' + rowData)
@@ -140,7 +128,7 @@ export default function Events(props: QueryProps) {
                             })
                         ]}
                     />
-                </Container>
+                </Container> : null}
 
                 <AlertDialog show={alertDialog.show} title={alertDialog.title} msg={alertDialog.msg} handle={alertDialog.handle} />
             </main>
