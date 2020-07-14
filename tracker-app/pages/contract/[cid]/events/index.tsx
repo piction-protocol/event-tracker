@@ -62,6 +62,15 @@ export default function Events() {
         return await API.event.getAll(cid as string, pageParam)
     }
 
+    const removeEvent = async (event: EventItem) => {
+        try {
+            const response = await API.event.delete(cid as string, event.id)
+            refreshTable()
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -124,6 +133,17 @@ export default function Events() {
                                 tooltip: 'Delete Event',
                                 onClick: (event, rowData) => {
                                     let row = rowData as EventItem
+                                    setAlertDialog({
+                                        show: true,
+                                        title: 'Delete',
+                                        msg: `Do you want to delete the '${row.name}'`,
+                                        handle: (confirm: boolean) => {
+                                            if (confirm) {
+                                                removeEvent(row)
+                                            }
+                                            setAlertDialog({ show: false, title: '', msg: ``, handle: (confirm: boolean)=> {}})
+                                        }
+                                    })
                                 }
                             })
                         ]}
