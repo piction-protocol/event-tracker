@@ -1,20 +1,24 @@
 import React, { forwardRef } from 'react'
-import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import { CssBaseline } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
-import MaterialTable from "material-table"
-import TopBar from 'components/TopBar'
-import Event from 'model/Event'
-import useAPI from 'hooks/useAPI'
-
 import AddBox from '@material-ui/icons/AddBox'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import ChevronRight from '@material-ui/icons/ChevronRight'
-import DeleteOutline from '@material-ui/icons/DeleteOutline'
-import Edit from '@material-ui/icons/Edit'
 import FirstPage from '@material-ui/icons/FirstPage'
 import LastPage from '@material-ui/icons/LastPage'
+import DeleteIcon from '@material-ui/icons/Delete'
+import Edit from '@material-ui/icons/Edit'
+import MaterialTable from "material-table"
+import TopBar from 'components/TopBar'
+import Event from 'model/Event'
+import EventItem from 'model/EventItem'
+import AlertDialog from 'components/AlertDialog'
+import PageParam from 'model/PageParam'
+import PageResponse from 'model/PageResponse'
+import useAPI from 'hooks/useAPI'
 
 const tableIcons = {
     FirstPage: forwardRef<SVGSVGElement>((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -42,31 +46,32 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function Events() {
+interface QueryProps {
+    cid: string
+}
+
+export const getServerSideProps = async (context) => {
+    const { cid }: QueryProps = context.query
+    return {
+        props: { cid }
+    }
+}
+
+export default function Events(props: QueryProps) {
     const classes = useStyles()
     const router = useRouter()
-    const cId = router.query
-    
-    console.log('events cid : '+cId)
-
+    const tableRef = React.useRef()
     const API = useAPI()
-    const getEvents = async () => {
-        try {
-            //const response = await API cId.
-            
-        } catch (e) {
-            console.log(e)
-        }
+    const cId = props.cid
+
+    const [alertDialog, setAlertDialog] = React.useState({ show: false, title: '', msg: ``, handle: (confirm: boolean)=> {}})
+
+    const refreshTable = () => {
+        (tableRef.current as any)?.onQueryChange()
     }
 
-    let event: Event = {
-        id: 0,
-        name: 'Transfer',
-        description: '이벤트 셈플데이터',
-        contract_id: 1,
-        signature: 'from(Address indexed), to(Address indexed), value(Uint256)',
-        updated_at: 2000,
-        created_at: 3000
+    const getEvents = async (pageParam: PageParam) => {
+        return await API.event.getAll(cId, pageParam)
     }
 
     return (
@@ -77,6 +82,8 @@ export default function Events() {
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
                     <MaterialTable
+                        title="Event"
+                        tableRef={tableRef}
                         icons={tableIcons}
                         options={{
                             search: false,
@@ -86,19 +93,26 @@ export default function Events() {
                         columns={[
                             { title: "Id", field: "id", type: "numeric" },
                             { title: "Name", field: "name", type: "string" },
-                            { title: "Params", field: "params", type: "string" },
+                            { title: "Params", field: "signature", type: "string" },
                             { title: "Description", field: "description", type: "string" },
                         ]}
-                        data={[
-                            {
-                                id: event.id,
-                                name: event.name,
-                                params: event.signature,
-                                description: event.description,
-                            },
-                        ]}
+                        data={ query =>
+                            new Promise((resolve, reject) => {
+                                getEvents({ size: query.pageSize, page: query.page + 1 })
+                                .then(result => result.data as PageResponse<Event>)
+                                .then(result => {
+                                    if (result) {
+                                        resolve({
+                                            data: result.content,
+                                            page: result.pageable.pageNumber,
+                                            totalCount: result.totalElements,
+                                        })
+                                    } else {
+                                        reject("getEvent error")
+                                    }
+                                })
+                            })}
                         onRowClick={(event, rowData) => {
-                            console.log('event: ' + event)
                             console.log('rowData: ' + rowData)
                         }}
                         actions={[
@@ -118,16 +132,17 @@ export default function Events() {
                                 }
                             }),
                             rowData => ({
-                                icon: DeleteOutline,
-                                tooltip: 'Remove Event',
+                                icon: DeleteIcon,
+                                tooltip: 'Delete Event',
                                 onClick: (event, rowData) => {
-
+                                    let row = rowData as EventItem
                                 }
                             })
                         ]}
-                        title="Events"
                     />
                 </Container>
+
+                <AlertDialog show={alertDialog.show} title={alertDialog.title} msg={alertDialog.msg} handle={alertDialog.handle} />
             </main>
         </div>
     )

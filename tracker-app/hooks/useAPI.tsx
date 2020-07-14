@@ -41,10 +41,17 @@ function useAPI() {
         delete: (contractId: number) => API.delete(`contracts/${contractId}`),
     }
 
+    const event = {
+        get: (contractId: string, eventId: number) => API.get(`contracts/${contractId}/events/${eventId}`),
+        getAll: (contractId: string, page: PageParam) => API.get(`contracts/${contractId}/events`, {params: page}),
+        create: (contractId: string) => API.post(`contracts/${contractId}/events`),
+    }
+
     return {
         session,
         users,
         contract,
+        event,
       }
 }
 

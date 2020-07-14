@@ -57,7 +57,7 @@ export default function Home() {
     const [contractDialog, setContractDialog] = React.useState(false)
     const [selectedContract, setSelectedContract] = React.useState(null)
 
-    const refreshContracts = () => {
+    const refreshTable = () => {
         (tableRef.current as any)?.onQueryChange()
     }
 
@@ -68,7 +68,7 @@ export default function Home() {
     const removeContract = async (contract: ContractItem) => {
         try {
             const response = await API.contract.delete(contract.id)
-            refreshContracts()
+            refreshTable()
         } catch (e) {
             console.log(e)
         }
@@ -77,7 +77,7 @@ export default function Home() {
     const handleToggleContractDialog = (refresh: boolean) => {
         setContractDialog(!contractDialog)
         if (refresh) {
-            refreshContracts()
+            refreshTable()
         }
     }
 
@@ -103,7 +103,7 @@ export default function Home() {
                             { title: "Address(0x)", field: "address", type: "string" },
                             { title: "description", field: "description", type: "string" },
                         ]}
-                        data={query =>
+                        data={ query =>
                             new Promise((resolve, reject) => {
                                 getContracts({ size: query.pageSize, page: query.page + 1 })
                                     .then(result => result.data as PageResponse<Contract>)
