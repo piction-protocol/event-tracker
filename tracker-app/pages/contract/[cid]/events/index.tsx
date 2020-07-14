@@ -18,6 +18,7 @@ import AlertDialog from 'components/AlertDialog'
 import PageParam from 'model/PageParam'
 import PageResponse from 'model/PageResponse'
 import useAPI from 'hooks/useAPI'
+import EventDialog from 'components/EventDialog'
 
 const tableIcons = {
     FirstPage: forwardRef<SVGSVGElement>((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -48,11 +49,13 @@ const useStyles = makeStyles((theme) => ({
 export default function Events() {
     const classes = useStyles()
     const router = useRouter()
-    const tableRef = React.useRef()
     const API = useAPI()
     const { cid } = router.query
 
+    const tableRef = React.useRef()
     const [alertDialog, setAlertDialog] = React.useState({ show: false, title: '', msg: ``, handle: (confirm: boolean) => { } })
+    const [eventDialog, setEventDialog] = React.useState(false)
+    const [selectedEvent, setSelectedEvent] = React.useState(null)
 
     const refreshTable = () => {
         (tableRef.current as any)?.onQueryChange()
@@ -68,6 +71,13 @@ export default function Events() {
             refreshTable()
         } catch (e) {
             console.log(e)
+        }
+    }
+
+    const handleToggleEventDialog = (refresh: boolean) => {
+        setEventDialog(!eventDialog)
+        if (refresh) {
+            refreshTable()
         }
     }
 
@@ -118,14 +128,31 @@ export default function Events() {
                                 tooltip: 'Add Event',
                                 isFreeAction: true,
                                 onClick: (event) => {
-
+                                    setSelectedEvent({
+                                        id: 0, 
+                                        name: '', 
+                                        description: '', 
+                                        contract_id: cid, 
+                                        signature: '', 
+                                        updated_at: 0, 
+                                        created_at: 0 } as Event)
+                                    handleToggleEventDialog(false)
                                 }
                             },
                             rowData => ({
                                 icon: Edit,
                                 tooltip: 'Edit Event',
                                 onClick: (event, rowData) => {
-
+                                    let row = rowData as EventItem
+                                    setSelectedEvent({ 
+                                        id: row.id, 
+                                        name: row.name, 
+                                        description: row.description, 
+                                        contract_id: cid, 
+                                        signature: row.signature, 
+                                        updated_at: 0, 
+                                        created_at: 0 } as Event)
+                                    handleToggleEventDialog(false)
                                 }
                             }),
                             rowData => ({
@@ -149,7 +176,8 @@ export default function Events() {
                         ]}
                     />
                 </Container> : null}
-
+                
+                <EventDialog show={eventDialog} selected={selectedEvent} handle={handleToggleEventDialog} />
                 <AlertDialog show={alertDialog.show} title={alertDialog.title} msg={alertDialog.msg} handle={alertDialog.handle} />
             </main>
         </div>
