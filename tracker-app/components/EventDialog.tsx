@@ -9,6 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import InputRow from 'components/InputRow'
 import useAPI from 'hooks/useAPI'
 import DialogData from 'model/DialogData'
 import Event from 'model/Event'
@@ -138,6 +139,7 @@ export default function EventDialog(props: DialogData<Event>) {
                     disabled={loading}
                     onChange={(e) => { setParams(e.target.value) }}
                 />
+                <InputRow loading={loading} rowData={null}/>
             </DialogContent>
             <DialogActions>
                 <Button
