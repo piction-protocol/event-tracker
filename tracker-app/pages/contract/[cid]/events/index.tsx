@@ -65,17 +65,27 @@ export default function Events() {
         return await API.event.getAll(cid as string, pageParam)
     }
 
-    const removeEvent = async (event: EventItem) => {
+    const removeEvent = async (eventItem: EventItem) => {
         try {
-            const response = await API.event.delete(cid as string, event.id)
+            const response = await API.event.delete(cid as string, eventItem.id)
             refreshTable()
         } catch (e) {
             console.log(e)
         }
     }
 
-    const handleToggleEventDialog = (refresh: boolean) => {
-        setEventDialog(!eventDialog)
+    const showEventDialog = (eventItem: EventItem) => {
+        if (eventItem) {
+            setSelectedEvent(eventItem)
+        } else {
+            setSelectedEvent(null)
+        }
+
+        setEventDialog(true)
+    }
+
+    const hideEventDialog = (refresh: boolean) => {
+        setEventDialog(false)
         if (refresh) {
             refreshTable()
         }
@@ -128,31 +138,14 @@ export default function Events() {
                                 tooltip: 'Add Event',
                                 isFreeAction: true,
                                 onClick: (event) => {
-                                    setSelectedEvent({
-                                        id: 0, 
-                                        name: '', 
-                                        description: '', 
-                                        contract_id: cid, 
-                                        signature: '', 
-                                        updated_at: 0, 
-                                        created_at: 0 } as Event)
-                                    handleToggleEventDialog(false)
+                                    showEventDialog(null)
                                 }
                             },
                             rowData => ({
                                 icon: Edit,
                                 tooltip: 'Edit Event',
                                 onClick: (event, rowData) => {
-                                    let row = rowData as EventItem
-                                    setSelectedEvent({ 
-                                        id: row.id, 
-                                        name: row.name, 
-                                        description: row.description, 
-                                        contract_id: cid, 
-                                        signature: row.signature, 
-                                        updated_at: 0, 
-                                        created_at: 0 } as Event)
-                                    handleToggleEventDialog(false)
+                                    showEventDialog(rowData as EventItem)
                                 }
                             }),
                             rowData => ({
@@ -177,7 +170,7 @@ export default function Events() {
                     />
                 </Container> : null}
                 
-                <EventDialog show={eventDialog} selected={selectedEvent} handle={handleToggleEventDialog} />
+                <EventDialog show={eventDialog} contractId={cid as string} selected={selectedEvent} handle={hideEventDialog} />
                 <AlertDialog show={alertDialog.show} title={alertDialog.title} msg={alertDialog.msg} handle={alertDialog.handle} />
             </main>
         </div>
