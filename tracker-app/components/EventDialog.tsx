@@ -13,6 +13,7 @@ import InputRow from 'components/InputRow'
 import useAPI from 'hooks/useAPI'
 import DialogData from 'model/DialogData'
 import Event from 'model/Event'
+import { FormControl } from '@material-ui/core';
 
 interface validationText {
     error: boolean
@@ -31,6 +32,10 @@ const useStyles = makeStyles((theme) => ({
         left: '50%',
         marginTop: -12,
         marginLeft: -12,
+    },
+    formControlText: {
+        margin: theme.spacing(1),
+        minWidth: 500,
     },
 }))
 
@@ -96,50 +101,48 @@ export default function EventDialog(props: DialogData<Event>) {
             onClose={() => { props.handle(false) }}
             aria-labelledby="form-dialog-title"
             disableBackdropClick={loading}
-            disableEscapeKeyDown={loading}>
+            disableEscapeKeyDown={loading}
+            fullWidth={true}
+            maxWidth="md">
             <DialogTitle id="form-dialog-title">Event {props.selected.name != '' ? '수정' : '생성'}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Event {props.selected.name != '' ? '수정' : '생성'}
+                    Tracking 하고자 하는 Event를 {props.selected.name != '' ? '수정' : '생성'}해주세요. 
                 </DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    label="name"
-                    type="text"
-                    fullWidth
-                    required
-                    error={nameValidation.error}
-                    helperText={nameValidation.helperText}
-                    value={name}
-                    disabled={loading}
-                    onChange={(e) => { setName(e.target.value) }}
-                />
-                <TextField
-                    margin="dense"
-                    id="description"
-                    label="description"
-                    type="text"
-                    fullWidth
-                    value={description}
-                    disabled={loading}
-                    onChange={(e) => { setDescription(e.target.value) }}
-                />
-                <TextField
-                    margin="dense"
-                    id="signature"
-                    label="signature"
-                    type="text"
-                    fullWidth
-                    required
-                    error={paramsValidation.error}
-                    helperText={paramsValidation.helperText}
-                    value={params}
-                    disabled={loading}
-                    onChange={(e) => { setParams(e.target.value) }}
-                />
-                <InputRow loading={loading} rowData={null}/>
+                <FormControl
+                    className={classes.formControlText}
+                    disabled={loading}>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="name"
+                        type="text"
+                        required
+                        fullWidth={true}
+                        error={nameValidation.error}
+                        helperText={nameValidation.helperText}
+                        value={name}
+                        disabled={loading}
+                        onChange={(e) => { setName(e.target.value) }}
+                    />
+                </FormControl>
+                <br />
+                <FormControl
+                    className={classes.formControlText}
+                    disabled={loading}>
+                    <TextField
+                        margin="dense"
+                        id="description"
+                        label="description"
+                        type="text"
+                        fullWidth={true}
+                        value={description}
+                        disabled={loading}
+                        onChange={(e) => { setDescription(e.target.value) }}
+                    />
+                </FormControl>
+                <InputRow loading={loading} rowData={null} />
             </DialogContent>
             <DialogActions>
                 <Button
