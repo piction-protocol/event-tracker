@@ -73,8 +73,8 @@ export default function InputRow(props) {
 
     return (
         <div className={classes.root}>
-            <Typography variant="button" display="block" gutterBottom>
-                메소드 정보
+            <Typography variant="subtitle1" display="block" gutterBottom>
+                Params
             </Typography> 
             {rowData.length > 0 ? (
                 rowData.map((sample: Sample, index) =>
