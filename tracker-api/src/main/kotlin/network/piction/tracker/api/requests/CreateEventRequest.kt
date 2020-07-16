@@ -1,14 +1,13 @@
 package network.piction.tracker.api.requests
 
 import network.piction.tracker.common.entities.EventEntity
-import network.piction.tracker.common.entities.EventParamEntity
 import network.piction.tracker.common.entities.ParentEntity
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
 data class CreateEventRequest(
     val name: String,
-    var params: MutableList<EventParamEntity> = arrayListOf(),
+    var params: MutableList<EventParam> = arrayListOf(),
     val description: String?
 ) : IRequest {
     override fun validate(args: Array<Any>) {
