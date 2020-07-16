@@ -74,8 +74,19 @@ export default function Home() {
         }
     }
 
-    const handleToggleContractDialog = (refresh: boolean) => {
-        setContractDialog(!contractDialog)
+    const showContractDialog = (contract: ContractItem) => {
+        if (contract) {
+            setSelectedContract(contract)
+        } else {
+            setSelectedContract(null)
+        }
+
+        setContractDialog(true)
+    }
+
+    const hideContractDialog = (refresh: boolean) => {
+        setContractDialog(false)
+        
         if (refresh) {
             refreshTable()
         }
@@ -131,16 +142,14 @@ export default function Home() {
                                 tooltip: 'Add Contract',
                                 isFreeAction: true,
                                 onClick: (event) => { 
-                                    setSelectedContract(null)
-                                    handleToggleContractDialog(false)
+                                    showContractDialog(null)
                                 }
                             },
                             rowData => ({
                                 icon: Edit,
                                 tooltip: 'Edit Contract',
-                                onClick: (event, rowData) => { 
-                                    setSelectedContract(rowData)
-                                    handleToggleContractDialog(false)
+                                onClick: (event, rowData) => {
+                                    showContractDialog(rowData as ContractItem)
                                 }
                             }),
                             rowData => ({
@@ -172,7 +181,7 @@ export default function Home() {
                     />
                 </Container>
 
-                <ContractDialog show={contractDialog} selected={selectedContract} handle={handleToggleContractDialog} />
+                <ContractDialog show={contractDialog} selected={selectedContract} handle={hideContractDialog} />
                 <AlertDialog show={alertDialog.show} title={alertDialog.title} msg={alertDialog.msg} handle={alertDialog.handle} />
             </main>
         </div>
