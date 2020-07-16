@@ -11,6 +11,7 @@ import network.piction.tracker.api.services.EventService
 import network.piction.tracker.common.entities.ContractEntity
 import network.piction.tracker.common.entities.EventEntity
 import network.piction.tracker.common.entities.EventLogEntity
+import network.piction.tracker.common.entities.EventParamEntity
 import network.piction.tracker.common.enums.ValueType
 import network.piction.tracker.common.repositories.ContractRepository
 import network.piction.tracker.common.repositories.EventLogRepository
@@ -81,14 +82,20 @@ class EventController(
         }
 
         request.toEntity<EventEntity>().run {
+            this.params = request.params.mapIndexed { index, eventParam ->
+                EventParamEntity().apply {
+                    this.name = eventParam.name
+                    this.type = eventParam.type
+                    this.decimal = eventParam.decimal
+                    this.index = eventParam.index
+                    this.priority = index
+                    this.event = this@run
+                }
+            }.toMutableList()
             this.contract = contractRepository.getOne(contract.id)
-            this.signature = EventEncoder.encode(eventService.getWeb3jEvent(request.name, request.params))
-            this.params.forEachIndexed { i, it ->
-                it.event = this
-                it.priority = i
-            }
+            this.signature = EventEncoder.encode(eventService.getWeb3jEvent(request.name, this.params))
 
-            eventRepository.save(this)
+            eventRepository.save(this@run)
         }
     }
 
@@ -107,13 +114,18 @@ class EventController(
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
         }
 
-        event.contract = contractRepository.getOne(contract.id)
-        event.signature = EventEncoder.encode(eventService.getWeb3jEvent(request.name, request.params))
-        event.params = request.params.mapIndexed { i, it ->
-            it.event = event
-            it.priority = i
-            it
+        event.params = request.params.mapIndexed { index, eventParam ->
+            EventParamEntity().apply {
+                this.name = eventParam.name
+                this.type = eventParam.type
+                this.decimal = eventParam.decimal
+                this.index = eventParam.index
+                this.priority = index
+                this.event = event
+            }
         }.toMutableList()
+        event.contract = contractRepository.getOne(contract.id)
+        event.signature = EventEncoder.encode(eventService.getWeb3jEvent(request.name, event.params))
 
         eventRepository.save(event)
     }
