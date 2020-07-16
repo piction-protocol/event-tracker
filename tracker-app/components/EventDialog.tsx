@@ -9,7 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import InputRow from 'components/InputRow'
+import EventParamRow from 'components/EventParamRow'
 import useAPI from 'hooks/useAPI'
 import DialogData from 'model/DialogData'
 import Event from 'model/Event'
@@ -142,7 +142,7 @@ export default function EventDialog(props: DialogData<Event>) {
                         onChange={(e) => { setDescription(e.target.value) }}
                     />
                 </FormControl>
-                <InputRow loading={loading} rowData={null} />
+                <EventParamRow loading={loading} rowData={null} />
             </DialogContent>
             <DialogActions>
                 <Button

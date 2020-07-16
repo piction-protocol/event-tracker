@@ -3,18 +3,12 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles';
 import { Select, MenuItem, Grid, FormControl, InputLabel, Typography } from '@material-ui/core'
+import { ParamType } from 'model/ParamType'
+import EventParam from 'model/EventParam'
 
 interface Sample {
     name: string
     value: string
-}
-
-enum Type {
-    address = 'Address',
-    uint256 = 'Uint256',
-    uint = 'Uint',
-    bool = 'Bool',
-    utf8String = 'Utf8String'
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -40,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }),
 );
 
-export default function InputRow(props) {
+export default function EventParamRow(props) {
 
     const sampleData = [{
         name: "soso",
@@ -106,11 +100,11 @@ export default function InputRow(props) {
                                         //value={age}
                                         //onChange={handleChange}
                                     >
-                                        <MenuItem value={Type.address}>{Type.address}</MenuItem>
-                                        <MenuItem value={Type.uint256}>{Type.uint256}</MenuItem>
-                                        <MenuItem value={Type.uint}>{Type.uint}</MenuItem>
-                                        <MenuItem value={Type.bool}>{Type.bool}</MenuItem>
-                                        <MenuItem value={Type.utf8String}>{Type.utf8String}</MenuItem>
+                                        <MenuItem value={ParamType.address}>{ParamType.address}</MenuItem>
+                                        <MenuItem value={ParamType.uint256}>{ParamType.uint256}</MenuItem>
+                                        <MenuItem value={ParamType.uint}>{ParamType.uint}</MenuItem>
+                                        <MenuItem value={ParamType.bool}>{ParamType.bool}</MenuItem>
+                                        <MenuItem value={ParamType.utf8String}>{ParamType.utf8String}</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
