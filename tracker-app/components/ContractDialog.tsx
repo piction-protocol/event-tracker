@@ -10,7 +10,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import useAPI from 'hooks/useAPI'
-import DialogData from 'model/DialogData'
+import ContractDialogData from 'model/ContractDialogData'
 import Contract from 'model/Contract'
 
 interface validationText {
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function ContractDialog(props: DialogData<Contract>) {
+export default function ContractDialog(props: ContractDialogData) {
     if (!props.show) {
         return null
     }
