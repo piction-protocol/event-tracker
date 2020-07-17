@@ -13,6 +13,7 @@ import { FormControl } from '@material-ui/core';
 import EventParamRow from 'components/EventParamRow'
 import useAPI from 'hooks/useAPI'
 import EventDialogData from 'model/EventDialogData'
+import EventParam from 'model/EventParam';
 
 interface validationText {
     error: boolean
@@ -93,6 +94,10 @@ export default function EventDialog(props: EventDialogData) {
         update()
     }
 
+    const paramsUpdater = (params: Array<EventParam>) => {
+        setParams(params)
+    }
+
     return (
         <Dialog
             open={props.show}
@@ -140,7 +145,7 @@ export default function EventDialog(props: EventDialogData) {
                         onChange={(e) => { setDescription(e.target.value) }}
                     />
                 </FormControl>
-                <EventParamRow loading={loading} rowData={params} />
+                <EventParamRow loading={loading} rowData={params} updater={paramsUpdater}/>
             </DialogContent>
             <DialogActions>
                 <Button

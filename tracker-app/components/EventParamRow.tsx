@@ -37,9 +37,14 @@ export default function EventParamRow(props: EventParamRowData) {
     const range = (start: number, stop: number, step: number) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step))
     const decimals = range(0, 18, 1)
 
+    const updateRowData = (rowData: Array<EventParam>) => {
+        setRowData(rowData)
+        props.updater(rowData)
+    }
+
     const addRow = () => {
         if (rowData) {
-            setRowData((state) => [...state, { 
+            updateRowData([...rowData, { 
                 id: 0,
                 name: "",
                 type: ParamType.address,
@@ -47,9 +52,9 @@ export default function EventParamRow(props: EventParamRowData) {
                 decimal: 0,
                 priority: 0,
                 event: null
-             } as EventParam])
+            } as EventParam])
         } else {
-            setRowData([{ 
+            updateRowData([{ 
                 id: 0,
                 name: "",
                 type: ParamType.address,
@@ -57,34 +62,34 @@ export default function EventParamRow(props: EventParamRowData) {
                 decimal: 0,
                 priority: 0,
                 event: null
-             } as EventParam])
+            } as EventParam])
         }
     }
 
     const removeRow = (index: number) => {
         let temp = [...rowData]
         temp.splice(index, 1)
-        setRowData(temp)
+        updateRowData(temp)
     }
 
     const handleChangeName = (event: React.ChangeEvent<{ value: unknown}>, index: number) => {
         rowData[index].name = event.target.value as string
-        setRowData((rowData) => [...rowData])
+        updateRowData([...rowData])
     }
 
     const handleChangeType = (event: React.ChangeEvent<{ value: unknown}>, index: number) => {
         rowData[index].type = event.target.value as string
-        setRowData((rowData) => [...rowData])
+        updateRowData([...rowData])
     }
 
     const handleChangeDecimal = (event: React.ChangeEvent<{ value: unknown}>, index: number) => {
         rowData[index].decimal = event.target.value as number
-        setRowData((rowData) => [...rowData])
+        updateRowData([...rowData])
     }
 
     const handleChangeIndex = (event: React.ChangeEvent<{ value: unknown}>, index: number) => {
         rowData[index].index = event.target.value as boolean
-        setRowData((rowData) => [...rowData])
+        updateRowData([...rowData])
     }
 
 
