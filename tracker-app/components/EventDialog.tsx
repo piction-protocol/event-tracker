@@ -14,6 +14,7 @@ import EventParamRow from 'components/EventParamRow'
 import useAPI from 'hooks/useAPI'
 import EventDialogData from 'model/EventDialogData'
 import EventParam from 'model/EventParam';
+import Event from 'model/Event'
 
 interface validationText {
     error: boolean
@@ -49,7 +50,6 @@ export default function EventDialog(props: EventDialogData) {
     const [params, setParams] = React.useState(props.selected ? props.selected.params : null)
     const [description, setDescription] = React.useState(props.selected ? props.selected.description : '')
     const [nameValidation, setNameValidation] = React.useState({ error: false, helperText: "" } as validationText)
-    const [paramsValidation, setParamsValidation] = React.useState({ error: false, helperText: "" } as validationText)
 
     const [loading, setLoading] = React.useState(false)
 
@@ -57,8 +57,8 @@ export default function EventDialog(props: EventDialogData) {
     const update = async () => {
         try {
             const response = props.selected
-                ? await API.event.edit(props.contractId, 0)//{ name, params, description } as Event)
-                : await API.event.create(props.contractId) // { name, params, description } as Event)
+                ? await API.event.edit(props.contractId, props.selected.id, { name: name, description: description, params: params } as Event)
+                : await API.event.create(props.contractId, { name: name, description: description, params: (params) ? params : [] } as Event)
             console.log(`response : ${response}`)
             console.log('response status : ' + response.status)
             console.log('response data : ' + response.data)
@@ -73,16 +73,10 @@ export default function EventDialog(props: EventDialogData) {
 
     const validation = () => {
         setNameValidation({ error: false, helperText: "" } as validationText)
-        setParamsValidation({ error: false, helperText: "" } as validationText)
 
         let error = false
         if (name === '') {
             setNameValidation({ error: true, helperText: "이름을 입력해주세요." })
-            error = true
-        }
-
-        if (params === null) {
-            setParamsValidation({ error: true, helperText: "Params를 입력해주세요." })
             error = true
         }
 
