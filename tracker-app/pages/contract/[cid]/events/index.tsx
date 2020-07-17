@@ -19,6 +19,7 @@ import PageParam from 'model/PageParam'
 import PageResponse from 'model/PageResponse'
 import useAPI from 'hooks/useAPI'
 import EventDialog from 'components/EventDialog'
+import EventParam from 'model/EventParam';
 
 const tableIcons = {
     FirstPage: forwardRef<SVGSVGElement>((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -56,6 +57,7 @@ export default function Events() {
     const [alertDialog, setAlertDialog] = React.useState({ show: false, title: '', msg: ``, handle: (confirm: boolean) => { } })
     const [eventDialog, setEventDialog] = React.useState(false)
     const [selectedEvent, setSelectedEvent] = React.useState(null)
+    const [events, setEvents] = React.useState({} as Array<Event>)
 
     const refreshTable = () => {
         (tableRef.current as any)?.onQueryChange()
@@ -74,9 +76,9 @@ export default function Events() {
         }
     }
 
-    const showEventDialog = (eventItem: EventItem) => {
-        if (eventItem) {
-            setSelectedEvent(eventItem)
+    const showEventDialog = (event: Event) => {
+        if (event) {
+            setSelectedEvent(event)
         } else {
             setSelectedEvent(null)
         }
@@ -89,6 +91,14 @@ export default function Events() {
         if (refresh) {
             refreshTable()
         }
+    }
+
+    const paramsToString = (eventParams: Array<EventParam>) => {
+        let params = ''
+        eventParams.forEach((param) => {
+            params = params.concat(`${param.name}(${param.type}) `)
+        })
+        return params
     }
 
     return (
@@ -108,9 +118,9 @@ export default function Events() {
                             actionsColumnIndex: -1
                         }}
                         columns={[
-                            { title: "Id", field: "id", type: "numeric" },
+                            { title: "Id", field: "id", type: "numeric", width: 100 },
                             { title: "Name", field: "name", type: "string" },
-                            { title: "Params", field: "signature", type: "string" },
+                            { title: "Params", field: "params", type: "string" },
                             { title: "Description", field: "description", type: "string" },
                         ]}
                         data={query =>
@@ -119,8 +129,16 @@ export default function Events() {
                                     .then(result => result.data as PageResponse<Event>)
                                     .then(result => {
                                         if (result) {
+                                            setEvents(result.content)
                                             resolve({
-                                                data: result.content,
+                                                data: result.content.map((event) => {
+                                                    return {
+                                                        id: event.id,
+                                                        name: event.name,
+                                                        params: paramsToString(event.params),
+                                                        description: event.description
+                                                    }
+                                                }),
                                                 page: result.pageable.pageNumber,
                                                 totalCount: result.totalElements,
                                             })
@@ -145,7 +163,7 @@ export default function Events() {
                                 icon: Edit,
                                 tooltip: 'Edit Event',
                                 onClick: (event, rowData) => {
-                                    showEventDialog(rowData as EventItem)
+                                    showEventDialog(events.find((item) => item.id === (rowData as EventItem).id))
                                 }
                             }),
                             rowData => ({

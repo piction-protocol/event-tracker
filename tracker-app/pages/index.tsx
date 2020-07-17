@@ -109,7 +109,7 @@ export default function Home() {
                             actionsColumnIndex: -1,
                         }}
                         columns={[
-                            { title: "Id", field: "id", type: "numeric" },
+                            { title: "Id", field: "id", type: "numeric", width: 100 },
                             { title: "Name", field: "name", type: "string" },
                             { title: "Address(0x)", field: "address", type: "string" },
                             { title: "description", field: "description", type: "string" },

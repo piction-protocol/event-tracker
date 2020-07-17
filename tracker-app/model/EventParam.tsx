@@ -5,7 +5,5 @@ export default interface EventParam {
     index: boolean
     decimal: number
     priority: number
-    event_id: number
-    updated_at: number
-    created_at: number
+    event: Event
 }

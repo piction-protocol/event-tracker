@@ -1,8 +1,8 @@
-import EventItem from "./EventItem";
+import Event from "./Event";
 
 export default interface EventDialogData {
     show: boolean
     contractId: string
-    selected: EventItem
+    selected: Event
     handle: (refresh: boolean) => void
 }

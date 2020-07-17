@@ -9,11 +9,10 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import { FormControl } from '@material-ui/core';
 import EventParamRow from 'components/EventParamRow'
 import useAPI from 'hooks/useAPI'
 import EventDialogData from 'model/EventDialogData'
-import Event from 'model/Event'
-import { FormControl } from '@material-ui/core';
 
 interface validationText {
     error: boolean
@@ -46,9 +45,8 @@ export default function EventDialog(props: EventDialogData) {
 
     const classes = useStyles()
     const [name, setName] = React.useState(props.selected ? props.selected.name : '')
-    const [params, setParams] = React.useState(props.selected ? props.selected.signature : '')
+    const [params, setParams] = React.useState(props.selected ? props.selected.params : null)
     const [description, setDescription] = React.useState(props.selected ? props.selected.description : '')
-
     const [nameValidation, setNameValidation] = React.useState({ error: false, helperText: "" } as validationText)
     const [paramsValidation, setParamsValidation] = React.useState({ error: false, helperText: "" } as validationText)
 
@@ -82,7 +80,7 @@ export default function EventDialog(props: EventDialogData) {
             error = true
         }
 
-        if (params === '') {
+        if (params === null) {
             setParamsValidation({ error: true, helperText: "Params를 입력해주세요." })
             error = true
         }
@@ -142,7 +140,7 @@ export default function EventDialog(props: EventDialogData) {
                         onChange={(e) => { setDescription(e.target.value) }}
                     />
                 </FormControl>
-                <EventParamRow loading={loading} rowData={null} />
+                <EventParamRow loading={loading} rowData={params} />
             </DialogContent>
             <DialogActions>
                 <Button
