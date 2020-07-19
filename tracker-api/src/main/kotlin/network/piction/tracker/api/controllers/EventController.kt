@@ -114,7 +114,8 @@ class EventController(
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
         }
 
-        event.params = request.params.mapIndexed { index, eventParam ->
+        event.params.clear()
+        event.params.addAll(request.params.mapIndexed { index, eventParam ->
             EventParamEntity().apply {
                 this.name = eventParam.name
                 this.type = eventParam.type
@@ -123,7 +124,8 @@ class EventController(
                 this.priority = index
                 this.event = event
             }
-        }.toMutableList()
+        }.toMutableList())
+
         event.contract = contractRepository.getOne(contract.id)
         event.signature = EventEncoder.encode(eventService.getWeb3jEvent(request.name, event.params))
 
