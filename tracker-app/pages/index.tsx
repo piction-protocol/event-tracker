@@ -12,14 +12,14 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import Edit from '@material-ui/icons/Edit'
 import FindInPageIcon from '@material-ui/icons/FindInPage'
 import MaterialTable from "material-table"
-import TopBar from '../components/TopBar'
-import ContractDialog from '../components/ContractDialog'
-import AlertDialog from '../components/AlertDialog'
-import ContractItem from '../model/ContractItem'
-import PageParam from '../model/PageParam'
-import PageResponse from '../model/PageResponse'
-import Contract from '../model/Contract'
-import useAPI from '../hooks/useAPI'
+import TopBar from 'components/TopBar'
+import ContractDialog from 'components/ContractDialog'
+import AlertDialog from 'components/AlertDialog'
+import ContractItem from 'model/ContractItem'
+import PageParam from 'model/PageParam'
+import PageResponse from 'model/PageResponse'
+import Contract from 'model/Contract'
+import useAPI from 'hooks/useAPI'
 
 const tableIcons = {
     FirstPage: forwardRef<SVGSVGElement>((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -57,7 +57,7 @@ export default function Home() {
     const [contractDialog, setContractDialog] = React.useState(false)
     const [selectedContract, setSelectedContract] = React.useState(null)
 
-    const refreshContracts = () => {
+    const refreshTable = () => {
         (tableRef.current as any)?.onQueryChange()
     }
 
@@ -68,16 +68,27 @@ export default function Home() {
     const removeContract = async (contract: ContractItem) => {
         try {
             const response = await API.contract.delete(contract.id)
-            refreshContracts()
+            refreshTable()
         } catch (e) {
             console.log(e)
         }
     }
 
-    const handleToggleContractDialog = (refresh: boolean) => {
-        setContractDialog(!contractDialog)
+    const showContractDialog = (contract: ContractItem) => {
+        if (contract) {
+            setSelectedContract(contract)
+        } else {
+            setSelectedContract(null)
+        }
+
+        setContractDialog(true)
+    }
+
+    const hideContractDialog = (refresh: boolean) => {
+        setContractDialog(false)
+        
         if (refresh) {
-            refreshContracts()
+            refreshTable()
         }
     }
 
@@ -98,12 +109,12 @@ export default function Home() {
                             actionsColumnIndex: -1,
                         }}
                         columns={[
-                            { title: "Id", field: "id", type: "numeric" },
+                            { title: "Id", field: "id", type: "numeric", width: 100 },
                             { title: "Name", field: "name", type: "string" },
                             { title: "Address(0x)", field: "address", type: "string" },
                             { title: "description", field: "description", type: "string" },
                         ]}
-                        data={query =>
+                        data={ query =>
                             new Promise((resolve, reject) => {
                                 getContracts({ size: query.pageSize, page: query.page + 1 })
                                     .then(result => result.data as PageResponse<Contract>)
@@ -131,16 +142,14 @@ export default function Home() {
                                 tooltip: 'Add Contract',
                                 isFreeAction: true,
                                 onClick: (event) => { 
-                                    setSelectedContract(null)
-                                    handleToggleContractDialog(false)
+                                    showContractDialog(null)
                                 }
                             },
                             rowData => ({
                                 icon: Edit,
                                 tooltip: 'Edit Contract',
-                                onClick: (event, rowData) => { 
-                                    setSelectedContract(rowData)
-                                    handleToggleContractDialog(false)
+                                onClick: (event, rowData) => {
+                                    showContractDialog(rowData as ContractItem)
                                 }
                             }),
                             rowData => ({
@@ -172,7 +181,7 @@ export default function Home() {
                     />
                 </Container>
 
-                <ContractDialog show={contractDialog} selected={selectedContract} handle={handleToggleContractDialog} />
+                <ContractDialog show={contractDialog} selected={selectedContract} handle={hideContractDialog} />
                 <AlertDialog show={alertDialog.show} title={alertDialog.title} msg={alertDialog.msg} handle={alertDialog.handle} />
             </main>
         </div>

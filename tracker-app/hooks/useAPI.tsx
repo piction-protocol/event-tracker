@@ -1,8 +1,9 @@
 import axios from 'axios'
 import Router from 'next/router'
-import User from '../model/User'
-import Contract from '../model/Contract'
-import PageParam from '../model/PageParam'
+import User from 'model/User'
+import PageParam from 'model/PageParam'
+import Contract from 'model/Contract'
+import Event from 'model/Event'
 
 function useAPI() {
     
@@ -41,10 +42,19 @@ function useAPI() {
         delete: (contractId: number) => API.delete(`contracts/${contractId}`),
     }
 
+    const event = {
+        create: (contractId: string, event: Event) => API.post(`contracts/${contractId}/events`, event),
+        get: (contractId: string, eventId: number) => API.get(`contracts/${contractId}/events/${eventId}`),
+        getAll: (contractId: string, page: PageParam) => API.get(`contracts/${contractId}/events`, {params: page}),
+        edit: (contractId: string, eventId: number, event: Event) => API.put(`contracts/${contractId}/events/${eventId}`, event),
+        delete: (contractId: string, eventId: number) => API.delete(`contracts/${contractId}/events/${eventId}`),
+    }
+
     return {
         session,
         users,
         contract,
+        event,
       }
 }
 

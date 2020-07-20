@@ -1,7 +1,7 @@
-import Contract from "./Contract";
+import ContractItem from "./ContractItem";
 
 export default interface ContractDialogData {
     show: boolean
-    selected: Contract
+    selected: ContractItem
     handle: (refresh: boolean) => void
 }

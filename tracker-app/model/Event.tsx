@@ -1,9 +1,11 @@
+import Contract from "./Contract";
+import EventParam from "./EventParam";
+
 export default interface Event {
     id: number
     name: string
     description: string
-    contract_id: number
+    contract: Contract
     signature: string
-    updated_at: number
-    created_at: number
+    params: Array<EventParam>
 }
