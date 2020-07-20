@@ -148,7 +148,10 @@ export default function Events() {
                                     })
                             })}
                         onRowClick={(event, rowData) => {
+                            console.log('event: ' + event)
                             console.log('rowData: ' + rowData)
+                            let row = rowData as EventItem
+                            router.replace(`/contract/${cid as string}/events/${row.id}/logs`)
                         }}
                         actions={[
                             {
