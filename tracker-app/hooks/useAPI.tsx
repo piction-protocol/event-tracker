@@ -44,7 +44,7 @@ function useAPI() {
 
     const event = {
         create: (contractId: string, event: Event) => API.post(`contracts/${contractId}/events`, event),
-        get: (contractId: string, eventId: number) => API.get(`contracts/${contractId}/events/${eventId}`),
+        get: (contractId: string, eventId: string) => API.get(`contracts/${contractId}/events/${eventId}`),
         getAll: (contractId: string, page: PageParam) => API.get(`contracts/${contractId}/events`, {params: page}),
         edit: (contractId: string, eventId: number, event: Event) => API.put(`contracts/${contractId}/events/${eventId}`, event),
         delete: (contractId: string, eventId: number) => API.delete(`contracts/${contractId}/events/${eventId}`),

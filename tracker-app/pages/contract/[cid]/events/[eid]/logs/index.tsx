@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import { CssBaseline } from '@material-ui/core'
@@ -46,8 +46,27 @@ export default function Logs() {
     const API = useAPI()
     const { cid, eid } = router.query
 
+    const [event, setEvent] = React.useState(null)
+    const [columns, setColumns] = React.useState(null)
+
     const getLogs = async (pageParam: PageParam) => {
         return await API.event.getLogs(cid as string, eid as string, pageParam)
+    }
+
+    const getEvent = async () => {
+        try {
+            const result = await API.event.get(cid as string, eid as string)
+            console.log(result.data)
+            setEvent(result.data)
+
+            //todo setColumns
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    if (eid && event == null) {
+        getEvent()
     }
 
     return (
@@ -56,7 +75,7 @@ export default function Logs() {
             <TopBar />
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                {cid && eid ? <Container maxWidth="lg" className={classes.container}>
+                {cid && eid && event ? <Container maxWidth="lg" className={classes.container}>
                     <MaterialTable
                         title="Logs"
                         icons={tableIcons}
@@ -77,7 +96,6 @@ export default function Logs() {
                                 getLogs({ size: query.pageSize, page: query.page + 1 })
                                     .then(result => result.data as PageResponse<EventLog>)
                                     .then(result => {
-                                        console.log(result)
                                         if (result) {
                                             resolve({
                                                 data: result.content.map((log) => {
