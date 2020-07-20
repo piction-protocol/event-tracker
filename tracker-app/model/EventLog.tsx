@@ -1,11 +1,13 @@
 export default interface EventLog {
     id: number
     address: string
+    topic: string
+    values: Array<string>
     signature: string
-    transaction_hash: string
+    transactionHash: string
     topics: string
     data: string
     log_index: number
-    block_time: number
+    blockTime: number
     timestamp: number
 }

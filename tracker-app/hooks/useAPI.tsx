@@ -48,7 +48,7 @@ function useAPI() {
         getAll: (contractId: string, page: PageParam) => API.get(`contracts/${contractId}/events`, {params: page}),
         edit: (contractId: string, eventId: number, event: Event) => API.put(`contracts/${contractId}/events/${eventId}`, event),
         delete: (contractId: string, eventId: number) => API.delete(`contracts/${contractId}/events/${eventId}`),
-        getLogs: (contractId: string, eventId: string, page: PageParam) => API.get(`contracts/${contractId}/events`, {params: page}),
+        getLogs: (contractId: string, eventId: string, page: PageParam) => API.get(`contracts/${contractId}/events/${eventId}/logs`, {params: page}),
     }
 
     return {

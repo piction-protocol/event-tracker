@@ -66,10 +66,10 @@ export default function Logs() {
                             actionsColumnIndex: -1
                         }}
                         columns={[
-                            { title: "Transaction", field: "transaction", type: "string", width: 100 },
+                            { title: "TransactionHash", field: "transactionHash", type: "string", width: 100 },
                             { title: "From", field: "from", type: "string" },
                             { title: "To", field: "to", type: "string" },
-                            { title: "Value", field: "value", type: "currency" },
+                            { title: "Value", field: "value", type: "string" },
                             { title: "Block Time", field: "block_time", type: "datetime" },
                         ]}
                         data={query =>
@@ -77,15 +77,16 @@ export default function Logs() {
                                 getLogs({ size: query.pageSize, page: query.page + 1 })
                                     .then(result => result.data as PageResponse<EventLog>)
                                     .then(result => {
+                                        console.log(result)
                                         if (result) {
                                             resolve({
                                                 data: result.content.map((log) => {
                                                     return {
-                                                        transaction: log.transaction_hash,
-                                                        from: log.address,
-                                                        to: log.address,
-                                                        value: log.data,
-                                                        block_time: log.block_time
+                                                        transactionHash: log.transactionHash,
+                                                        from: log.values[0],
+                                                        to: log.values[1],
+                                                        value: log.values[2],
+                                                        block_time: log.blockTime
                                                     }
                                                 }),
                                                 page: result.pageable.pageNumber,
