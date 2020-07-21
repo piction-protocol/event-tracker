@@ -11,6 +11,7 @@ import MaterialTable from "material-table"
 import TopBar from 'components/TopBar'
 import PageResponse from 'model/PageResponse'
 import useAPI from 'hooks/useAPI'
+import Event from 'model/Event'
 import EventLog from 'model/EventLog'
 import PageParam from 'model/PageParam'
 
@@ -56,10 +57,19 @@ export default function Logs() {
     const getEvent = async () => {
         try {
             const result = await API.event.get(cid as string, eid as string)
-            console.log(result.data)
             setEvent(result.data)
 
-            //todo setColumns
+            let newColumns: Array<any> = new Array();
+
+            newColumns.push({ title: "transactionHash", field: "transactionHash", type: "string", width: 100 })
+            
+            let event = result.data as Event
+            event.params.forEach((param) => {
+                newColumns.push({ title: param.name, field: param.name, type: "string"})
+            })
+            
+            newColumns.push({ title: "block Time", field: "blockTime", type: "datetime"})
+            setColumns(newColumns)
         } catch (e) {
             console.log(e)
         }
@@ -75,7 +85,7 @@ export default function Logs() {
             <TopBar />
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                {cid && eid && event ? <Container maxWidth="lg" className={classes.container}>
+                {cid && eid && event && columns ? <Container maxWidth="lg" className={classes.container}>
                     <MaterialTable
                         title="Logs"
                         icons={tableIcons}
@@ -84,13 +94,7 @@ export default function Logs() {
                             sorting: false,
                             actionsColumnIndex: -1
                         }}
-                        columns={[
-                            { title: "TransactionHash", field: "transactionHash", type: "string", width: 100 },
-                            { title: "From", field: "from", type: "string" },
-                            { title: "To", field: "to", type: "string" },
-                            { title: "Value", field: "value", type: "string" },
-                            { title: "Block Time", field: "block_time", type: "datetime" },
-                        ]}
+                        columns={columns}
                         data={query =>
                             new Promise((resolve, reject) => {
                                 getLogs({ size: query.pageSize, page: query.page + 1 })
@@ -99,13 +103,20 @@ export default function Logs() {
                                         if (result) {
                                             resolve({
                                                 data: result.content.map((log) => {
-                                                    return {
-                                                        transactionHash: log.transactionHash,
-                                                        from: log.values[0],
-                                                        to: log.values[1],
-                                                        value: log.values[2],
-                                                        block_time: log.blockTime
-                                                    }
+                                                    var newRow = new Object();
+                                                    columns.forEach((column: { field: string }) => {
+                                                        if (log[column.field]) {
+                                                            newRow[column.field] = log[column.field]
+                                                        } else {
+                                                            (event as Event).params.forEach((param, index) => {
+                                                                if (param.name === column.field) {
+                                                                    newRow[column.field] = log.values[index]
+                                                                    return
+                                                                }
+                                                            })
+                                                        }
+                                                    })
+                                                    return newRow
                                                 }),
                                                 page: result.pageable.pageNumber,
                                                 totalCount: result.totalElements,
