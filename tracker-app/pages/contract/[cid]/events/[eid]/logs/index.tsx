@@ -54,25 +54,44 @@ export default function Logs() {
         return await API.event.getLogs(cid as string, eid as string, pageParam)
     }
 
+    const newColumns = (event: Event) => {
+        let newColumns: Array<any> = new Array();
+
+        newColumns.push({ title: "transactionHash", field: "transactionHash", type: "string", width: 100 })
+        
+        event.params.forEach((param) => {
+            newColumns.push({ title: param.name, field: param.name, type: "string"})
+        })
+        
+        newColumns.push({ title: "block Time", field: "blockTime", type: "datetime"})
+        setColumns(newColumns)
+    }
+
     const getEvent = async () => {
         try {
             const result = await API.event.get(cid as string, eid as string)
             setEvent(result.data)
-
-            let newColumns: Array<any> = new Array();
-
-            newColumns.push({ title: "transactionHash", field: "transactionHash", type: "string", width: 100 })
-            
-            let event = result.data as Event
-            event.params.forEach((param) => {
-                newColumns.push({ title: param.name, field: param.name, type: "string"})
-            })
-            
-            newColumns.push({ title: "block Time", field: "blockTime", type: "datetime"})
-            setColumns(newColumns)
+            newColumns(result.data)
         } catch (e) {
             console.log(e)
         }
+    }
+
+    const getNewRow = (log: EventLog) => {
+        var newRow = new Object();
+        columns.forEach((column: { field: string }) => {
+            if (log[column.field]) {
+                newRow[column.field] = log[column.field]
+            } else {
+                (event as Event).params.forEach((param, index) => {
+                    if (param.name === column.field) {
+                        newRow[column.field] = log.values[index]
+                        return
+                    }
+                })
+            }
+        })
+        return newRow
     }
 
     if (eid && event == null) {
@@ -103,20 +122,7 @@ export default function Logs() {
                                         if (result) {
                                             resolve({
                                                 data: result.content.map((log) => {
-                                                    var newRow = new Object();
-                                                    columns.forEach((column: { field: string }) => {
-                                                        if (log[column.field]) {
-                                                            newRow[column.field] = log[column.field]
-                                                        } else {
-                                                            (event as Event).params.forEach((param, index) => {
-                                                                if (param.name === column.field) {
-                                                                    newRow[column.field] = log.values[index]
-                                                                    return
-                                                                }
-                                                            })
-                                                        }
-                                                    })
-                                                    return newRow
+                                                    return getNewRow(log)
                                                 }),
                                                 page: result.pageable.pageNumber,
                                                 totalCount: result.totalElements,
