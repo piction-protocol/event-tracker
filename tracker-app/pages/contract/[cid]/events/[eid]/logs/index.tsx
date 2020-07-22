@@ -133,7 +133,8 @@ export default function Logs() {
                                     })
                             })}
                         onRowClick={(event, rowData) => {
-                            console.log('rowData: ' + rowData)
+                            let row = rowData as EventLog
+                            window.open(`https://scope.klaytn.com/tx/${row.transactionHash}`, '_blank')
                         }}
                     />
                 </Container> : null}
