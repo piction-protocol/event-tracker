@@ -26,7 +26,7 @@ export default function ToggleMenu() {
     const logOut = async () => {
         try {
             const response = await API.session.delete()
-            Router.replace('/')
+            Router.reload();
         } catch (e) {
             console.log(e)
         }
