@@ -36,7 +36,7 @@ function useAPI() {
 
     const contract = {
         create: (contract: Contract) => API.post('contracts', contract),
-        get: (contractId: number) => API.get(`contracts/${contractId}`),
+        get: (contractId: string) => API.get(`contracts/${contractId}`),
         getAll: (page: PageParam) => API.get('contracts', {params: page}),
         edit: (contractId: number, contract: Contract) => API.put(`contracts/${contractId}`, contract),
         delete: (contractId: number) => API.delete(`contracts/${contractId}`),

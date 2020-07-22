@@ -14,6 +14,7 @@ import useAPI from 'hooks/useAPI'
 import Event from 'model/Event'
 import EventLog from 'model/EventLog'
 import PageParam from 'model/PageParam'
+import Contract from 'model/Contract'
 
 const tableIcons = {
     FirstPage: forwardRef<SVGSVGElement>((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -36,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
     },
+    breadcrumbs: {
+        paddingBottom: theme.spacing(4),
+    },
     table: {
         maxWidth: '100%'
     },
@@ -47,6 +51,7 @@ export default function Logs() {
     const API = useAPI()
     const { cid, eid } = router.query
 
+    const [contract, setContract] = React.useState(null)
     const [event, setEvent] = React.useState(null)
     const [columns, setColumns] = React.useState(null)
 
@@ -77,6 +82,15 @@ export default function Logs() {
         }
     }
 
+    const getContract = async () => {
+        try {
+            const result = await API.contract.get(cid as string)
+            setContract(result.data)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     const getNewRow = (log: EventLog) => {
         var newRow = new Object();
         columns.forEach((column: { field: string }) => {
@@ -102,13 +116,26 @@ export default function Logs() {
         getEvent()
     }
 
+    if (cid && contract == null) {
+        getContract()
+    }
+
     return (
         <div className={classes.root}>
             <CssBaseline />
             <TopBar />
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                {cid && eid && event && columns ? <Container maxWidth="xl" className={classes.container}>
+                {cid && eid && event && columns && contract ? <Container maxWidth="xl" className={classes.container}>
+                    <Breadcrumbs aria-label="breadcrumb" className={classes.breadcrumbs}>
+                        <Link color="inherit" href="/" >
+                            Contract
+                        </Link>
+                        <Link color="inherit" href={`/contract/${(contract as Contract).id}/events`} >
+                            {(contract as Contract).name}
+                        </Link>
+                        <Typography color="textPrimary">{(event as Event).name}</Typography>
+                    </Breadcrumbs>
                     <MaterialTable
                         title="Logs"
                         icons={tableIcons}
