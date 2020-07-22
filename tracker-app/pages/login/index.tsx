@@ -42,6 +42,12 @@ export default function LoginPage() {
             console.log(e)
         }
     }
+
+    const onKeyPress = (e: { key: string }) => {
+        if (e.key === "Enter") {
+            onSubmit()
+          }
+    }
     
     return (
         <Container component="main" maxWidth="xs">
@@ -74,6 +80,7 @@ export default function LoginPage() {
                         label="Password"
                         name="password"
                         type="password"
+                        onKeyPress={onKeyPress}
                         onChange={(e) => { setPassword(e.target.value) }}
                     />
                 </form>
