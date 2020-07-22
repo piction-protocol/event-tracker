@@ -166,7 +166,7 @@ export default function Home() {
                                 tooltip: 'Show Klaytn Scope',
                                 onClick: (event, rowData) => {
                                     let row = rowData as ContractItem
-                                    window.location.href = `https://scope.klaytn.com/account/${row.address}`
+                                    window.open(`https://scope.klaytn.com/account/${row.address}`, '_blank')
                                 }
                             }),
                         ]}
