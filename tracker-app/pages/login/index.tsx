@@ -1,13 +1,9 @@
 import React from "react"
 import useAPI from 'hooks/useAPI'
 import Router from 'next/router'
-import Container from '@material-ui/core/Container'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import LockIcon from '@material-ui/icons/Lock'
-import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
+import { Container, CssBaseline, Typography, TextField, Button } from '@material-ui/core'
+import LockIcon from '@material-ui/icons/Lock'
 
 
 const useStyles = makeStyles((theme) => ({

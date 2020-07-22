@@ -1,15 +1,8 @@
 import React, { forwardRef } from 'react'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
-import { CssBaseline } from '@material-ui/core'
-import Container from '@material-ui/core/Container'
-import AddBox from '@material-ui/icons/AddBox'
-import ChevronLeft from '@material-ui/icons/ChevronLeft'
-import ChevronRight from '@material-ui/icons/ChevronRight'
-import FirstPage from '@material-ui/icons/FirstPage'
-import LastPage from '@material-ui/icons/LastPage'
-import DeleteIcon from '@material-ui/icons/Delete'
-import Edit from '@material-ui/icons/Edit'
+import { CssBaseline, Container, Breadcrumbs, Link, Typography } from '@material-ui/core'
+import { AddBox, ChevronLeft, ChevronRight, FirstPage, LastPage, Delete, Edit } from '@material-ui/icons'
 import MaterialTable from "material-table"
 import TopBar from 'components/TopBar'
 import Event from 'model/Event'
@@ -194,7 +187,7 @@ export default function Events() {
                                 }
                             }),
                             rowData => ({
-                                icon: DeleteIcon,
+                                icon: Delete,
                                 tooltip: 'Delete Event',
                                 onClick: (event, rowData) => {
                                     let row = rowData as EventItem
