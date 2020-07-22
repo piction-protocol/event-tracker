@@ -58,13 +58,13 @@ export default function Logs() {
     const newColumns = (event: Event) => {
         let newColumns: Array<any> = new Array();
 
-        newColumns.push({ title: "transactionHash", field: "transactionHash", type: "string", width: 100 })
+        newColumns.push({ title: "Transaction Hash", field: "transactionHash", type: "string", width: 100 })
         
         event.params.forEach((param) => {
             newColumns.push({ title: param.name, field: param.name, type: "string"})
         })
         
-        newColumns.push({ title: "block Time", field: "blockTime", type: "datetime"})
+        newColumns.push({ title: "Block Time", field: "blockTime", type: "datetime"})
         setColumns(newColumns)
     }
 
