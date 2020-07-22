@@ -81,7 +81,11 @@ export default function Logs() {
         var newRow = new Object();
         columns.forEach((column: { field: string }) => {
             if (log[column.field]) {
-                newRow[column.field] = log[column.field]
+                if (column.field === 'blockTime') {
+                    newRow[column.field] = (new Date(log['blockTime']*1000)) 
+                } else {
+                    newRow[column.field] = log[column.field]
+                }
             } else {
                 (event as Event).params.forEach((param, index) => {
                     if (param.name === column.field) {
