@@ -108,7 +108,7 @@ export default function Logs() {
             <TopBar />
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                {cid && eid && event && columns ? <Container maxWidth="lg" className={classes.container}>
+                {cid && eid && event && columns ? <Container maxWidth="xl" className={classes.container}>
                     <MaterialTable
                         title="Logs"
                         icons={tableIcons}
