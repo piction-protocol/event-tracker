@@ -27,10 +27,10 @@ export default function AlertDialog(props: AlertDialogData) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => props.handle(false)} color="primary">
-                    Disagree
+                    Cancel
                 </Button>
                 <Button onClick={() => props.handle(true)} color="primary" autoFocus>
-                    Agree
+                    Confirm
                 </Button>
             </DialogActions>
         </Dialog>

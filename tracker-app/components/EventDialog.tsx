@@ -76,7 +76,7 @@ export default function EventDialog(props: EventDialogData) {
 
         let error = false
         if (name === '') {
-            setNameValidation({ error: true, helperText: "이름을 입력해주세요." })
+            setNameValidation({ error: true, helperText: "Input Name." })
             error = true
         }
 
@@ -101,10 +101,10 @@ export default function EventDialog(props: EventDialogData) {
             disableEscapeKeyDown={loading}
             fullWidth={true}
             maxWidth="md">
-            <DialogTitle id="form-dialog-title">Event {props.selected ? '수정' : '생성'}</DialogTitle>
+            <DialogTitle id="form-dialog-title">Event {props.selected ? 'Edit' : 'Create'}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Tracking 하고자 하는 Event를 {props.selected ? '수정' : '생성'}해주세요. 
+                    
                 </DialogContentText>
                 <FormControl
                     className={classes.formControlText}
@@ -146,14 +146,14 @@ export default function EventDialog(props: EventDialogData) {
                     onClick={() => { props.handle(false) }}
                     color="primary"
                     disabled={loading}>
-                    취소
+                    Cancel
                 </Button>
                 <div className={classes.wrapper}>
                     <Button
                         onClick={validation}
                         color="primary"
                         disabled={loading}>
-                        {props.selected ? '수정' : '확인'}
+                        Confirm
                     </Button>
                     {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
                 </div>
