@@ -1,15 +1,8 @@
 import React, { forwardRef } from 'react'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
-import { CssBaseline } from '@material-ui/core'
-import Container from '@material-ui/core/Container'
-import AddBox from '@material-ui/icons/AddBox'
-import ChevronLeft from '@material-ui/icons/ChevronLeft'
-import ChevronRight from '@material-ui/icons/ChevronRight'
-import FirstPage from '@material-ui/icons/FirstPage'
-import LastPage from '@material-ui/icons/LastPage'
-import DeleteIcon from '@material-ui/icons/Delete'
-import Edit from '@material-ui/icons/Edit'
+import { CssBaseline, Container, Breadcrumbs, Link, Typography } from '@material-ui/core'
+import { AddBox, ChevronLeft, ChevronRight, FirstPage, LastPage, Delete, Edit } from '@material-ui/icons'
 import MaterialTable from "material-table"
 import TopBar from 'components/TopBar'
 import Event from 'model/Event'
@@ -20,6 +13,7 @@ import PageResponse from 'model/PageResponse'
 import useAPI from 'hooks/useAPI'
 import EventDialog from 'components/EventDialog'
 import EventParam from 'model/EventParam';
+import Contract from 'model/Contract'
 
 const tableIcons = {
     FirstPage: forwardRef<SVGSVGElement>((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -42,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
     },
+    breadcrumbs: {
+        paddingBottom: theme.spacing(4),
+    },
     table: {
         maxWidth: '100%'
     },
@@ -58,6 +55,7 @@ export default function Events() {
     const [eventDialog, setEventDialog] = React.useState(false)
     const [selectedEvent, setSelectedEvent] = React.useState(null)
     const [events, setEvents] = React.useState({} as Array<Event>)
+    const [contract, setContract] = React.useState(null)
 
     const refreshTable = () => {
         (tableRef.current as any)?.onQueryChange()
@@ -71,6 +69,15 @@ export default function Events() {
         try {
             const response = await API.event.delete(cid as string, eventItem.id)
             refreshTable()
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const getContract = async () => {
+        try {
+            const result = await API.contract.get(cid as string)
+            setContract(result.data)
         } catch (e) {
             console.log(e)
         }
@@ -101,13 +108,23 @@ export default function Events() {
         return params
     }
 
+    if (cid && contract == null) {
+        getContract()
+    }
+
     return (
         <div className={classes.root}>
             <CssBaseline />
             <TopBar />
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                {cid ? <Container maxWidth="lg" className={classes.container}>
+                {cid && contract ? <Container maxWidth="lg" className={classes.container}>
+                    <Breadcrumbs aria-label="breadcrumb" className={classes.breadcrumbs}>
+                        <Link color="inherit" href="/" >
+                            Contract
+                        </Link>
+                        <Typography color="textPrimary">{(contract as Contract).name}</Typography>
+                    </Breadcrumbs>
                     <MaterialTable
                         title="Event"
                         tableRef={tableRef}
@@ -148,7 +165,10 @@ export default function Events() {
                                     })
                             })}
                         onRowClick={(event, rowData) => {
+                            console.log('event: ' + event)
                             console.log('rowData: ' + rowData)
+                            let row = rowData as EventItem
+                            router.replace(`/contract/${cid as string}/events/${row.id}/logs`)
                         }}
                         actions={[
                             {
@@ -167,7 +187,7 @@ export default function Events() {
                                 }
                             }),
                             rowData => ({
-                                icon: DeleteIcon,
+                                icon: Delete,
                                 tooltip: 'Delete Event',
                                 onClick: (event, rowData) => {
                                     let row = rowData as EventItem

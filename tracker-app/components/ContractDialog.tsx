@@ -72,12 +72,12 @@ export default function ContractDialog(props: ContractDialogData) {
 
         let error = false
         if (name === '') {
-            setNameValidation({ error: true, helperText: "이름을 입력해주세요." })
+            setNameValidation({ error: true, helperText: "Input Name." })
             error = true
         }
 
         if (address === '') {
-            setAdressValidation({ error: true, helperText: "주소를 입력해주세요." })
+            setAdressValidation({ error: true, helperText: "Input Address." })
             error = true
         }
 
@@ -96,10 +96,10 @@ export default function ContractDialog(props: ContractDialogData) {
             aria-labelledby="form-dialog-title"
             disableBackdropClick={loading}
             disableEscapeKeyDown={loading}>
-            <DialogTitle id="form-dialog-title">Contract {props.selected != null ? '수정' : '생성'}</DialogTitle>
+            <DialogTitle id="form-dialog-title">Contract {props.selected != null ? 'Edit' : 'Create'}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Contract {props.selected != null ? '수정' : '생성'}
+                    
                 </DialogContentText>
                 <TextField
                     autoFocus
@@ -144,14 +144,14 @@ export default function ContractDialog(props: ContractDialogData) {
                     onClick={() => { props.handle(false) }}
                     color="primary"
                     disabled={loading}>
-                    취소
+                    Cancel
                 </Button>
                 <div className={classes.wrapper}>
                     <Button
                         onClick={validation}
                         color="primary"
                         disabled={loading}>
-                        {props.selected != null ? '수정' : '확인'}
+                        Confirm
                     </Button>
                     {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
                 </div>
