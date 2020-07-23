@@ -8,7 +8,7 @@ import Event from 'model/Event'
 function useAPI() {
     
     const API = axios.create({
-        baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000', //'https://tracker-api.piction.network/',
+        baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
         headers: {
           'X-Device-Platform': 'web',
         },
