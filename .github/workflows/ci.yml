@@ -32,5 +32,8 @@ jobs:
     - name: Change wrapper permissions
       run: chmod +x ./gradlew
 
-    - name: Java Build 
-      run: ./gradlew build
+    - name: Api Build
+      run: ./gradlew tracker-api:build
+      
+    - name: Batch Build
+      run: ./gradlew tracker-batch:build
