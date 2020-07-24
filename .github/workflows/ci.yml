@@ -13,12 +13,12 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v2
       
-    - uses: borales/actions-yarn@v2.0.0
+    - name: Yarn install
+      uses: borales/actions-yarn@v2.0.0
       with:
-        cmd: install
-        working-directory: ./tracker-app
+        cmd: --cwd tracker-app install
 
-    - uses: borales/actions-yarn@v2.0.0
+    - name: Yarn build
+      uses: borales/actions-yarn@v2.0.0
       with:
-        cmd: build
-        working-directory: ./tracker-app
+        cmd: --cwd tracker-app build
