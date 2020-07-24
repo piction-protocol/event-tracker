@@ -27,7 +27,7 @@
 ### Tracker-api
 Respond to the REST-API request of the web page.
 - [Spring Security](https://spring.io/projects/spring-security)
-- [Spring jPA](https://spring.io/projects/spring-data-jpa)
+- [Spring PA](https://spring.io/projects/spring-data-jpa)
 - [caver.java](https://github.com/klaytn/caver-java) Klaytn Dapp API
 - [Jackson](https://github.com/FasterXML/jackson)
 
