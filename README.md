@@ -4,7 +4,8 @@
   <a href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"/></a>
   <img alt="SpringBoot" src="https://img.shields.io/badge/Spring--boot-2.1.4-green"/>
   <a href="https://nextjs.org/learn/excel/typescript"><img alt="Typescript" src="https://img.shields.io/badge/Typescript-Next.js-blue"/></a>
-   <a href="https://www.klaytn.com"><img alt="Blockchain" src="https://img.shields.io/badge/Blockchain-Klaytn-blue"/></a>
+  <img alt="CI" src="https://github.com/piction-protocol/event-tracker/workflows/CI/badge.svg"/>
+  <a href="https://www.klaytn.com"><img alt="Blockchain" src="https://img.shields.io/badge/Blockchain-Klaytn-blue"/></a>
   <img alt="Typescript" src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103"/>
 </p>
 
