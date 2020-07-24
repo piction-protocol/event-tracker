@@ -3,7 +3,7 @@ plugins {
 }
 
 application {
-    mainClass.set("network.piction.tracker.TrackerApiApplication")
+    mainClassName("network.piction.tracker.TrackerApiApplication")
 }
 
 dependencies {
