@@ -29,5 +29,5 @@ jobs:
       with:
         java-version: 1.8
 
-    - name: Java Build
+    - name: Java Build 
       run: ./gradlew build
