@@ -27,14 +27,14 @@
 ### Tracker-api
 Respond to the REST-API request of the web page.
 - [Spring Security](https://spring.io/projects/spring-security)
-- [Spring PA](https://spring.io/projects/spring-data-jpa)
+- [Spring JPA](https://spring.io/projects/spring-data-jpa)
 - [caver.java](https://github.com/klaytn/caver-java) Klaytn Dapp API
 - [Jackson](https://github.com/FasterXML/jackson)
 
 ### Tracker-batch
 Takes Klaytn blocks and collects event logs
 - [Spring Batch](https://spring.io/projects/spring-batch)
-- [Spring jPA](https://spring.io/projects/spring-data-jpa)
+- [Spring JPA](https://spring.io/projects/spring-data-jpa)
 - [Flyway](https://flywaydb.org/)
 - [caver.java](https://github.com/klaytn/caver-java) Klaytn Dapp API
 - [Jackson](https://github.com/FasterXML/jackson)
