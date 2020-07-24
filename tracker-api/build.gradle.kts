@@ -1,3 +1,11 @@
+plugins {
+    application
+}
+
+application {
+    mainClassName = "network.piction.tracker.TrackerApiApplication"
+}
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
