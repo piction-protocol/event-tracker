@@ -13,6 +13,7 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v2
       
+      # tracker-app
     - name: Yarn install
       uses: borales/actions-yarn@v2.0.0
       with:
@@ -22,3 +23,11 @@ jobs:
       uses: borales/actions-yarn@v2.0.0
       with:
         cmd: --cwd tracker-app build
+
+    - uses: actions/setup-java@v1
+      with:
+        java-version: 11
+        
+    - uses: eskatos/gradle-command-action@v1
+      with:
+        arguments: build
