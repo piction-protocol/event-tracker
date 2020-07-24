@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     java
@@ -21,11 +22,6 @@ allprojects {
     }
 }
 
-bootJar { 
-    enabled = false
-    jar.enabled=true
-}
-
 subprojects {
     apply(plugin = "kotlin")
     apply(plugin = "org.springframework.boot")
@@ -40,6 +36,12 @@ subprojects {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
         implementation("org.springframework.boot:spring-boot-starter-logging")
     }
+    
+    val jar: Jar by tasks
+    val bootJar: BootJar by tasks
+
+    bootJar.enabled = false
+    jar.enabled = true
 
     tasks.withType<KotlinCompile> {
         kotlinOptions {
