@@ -21,6 +21,11 @@ allprojects {
     }
 }
 
+bootJar { 
+    enabled = false
+    jar.enabled=true
+}
+
 subprojects {
     apply(plugin = "kotlin")
     apply(plugin = "org.springframework.boot")
