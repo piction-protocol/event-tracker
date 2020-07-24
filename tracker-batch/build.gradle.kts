@@ -1,11 +1,3 @@
-plugins {
-    application
-}
-
-application {
-    mainClassName = "network.piction.tracker.TrackerBatchApplication"
-}
-
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
