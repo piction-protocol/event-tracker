@@ -3,7 +3,7 @@ plugins {
 }
 
 application {
-    mainClassName("network.piction.tracker.TrackerBatchApplication")
+    mainClassName = "network.piction.tracker.TrackerBatchApplication"
 }
 
 dependencies {
