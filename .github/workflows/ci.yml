@@ -1,0 +1,39 @@
+
+name: CI
+
+on: [pull_request]
+  
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v2
+      
+      # tracker-app
+    - name: Yarn install
+      uses: borales/actions-yarn@v2.0.0
+      with:
+        cmd: --cwd tracker-app install
+
+    - name: Yarn build
+      uses: borales/actions-yarn@v2.0.0
+      with:
+        cmd: --cwd tracker-app build
+
+    - name: Setup Java 
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+    - name: Change wrapper permissions
+      run: chmod +x ./gradlew
+
+    - name: Api Build
+      run: ./gradlew tracker-api:build
+      
+    - name: Batch Build
+      run: ./gradlew tracker-batch:build
